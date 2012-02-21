@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head> 
+		<title>Test Game 5</title> 
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+		<style type="text/css"> 
+			  body {margin:0;padding:0; background-color: #629632;}
+			  div {margin:0 auto;max-width:1280px;}
+
+			  
+		</style> 
+		<script type="text/javascript" src='../vendor/sprite.js'></script> 
+		<script type="text/javascript">
+		
+		var engine;//tank, turret, missile,
+			//Create Engine Class
+			function Engine(scene, layer){
+				//store scene and layer for later
+				this.scene = scene;
+				this.layer = layer;
+				this.inputs = scene.Input();
+				//Var to keep track of missiles.
+				this.missiles = [];
+				
+				//Create our sprite
+				this.mytank = this.scene.Sprite("tank.png",{
+					"layer": this.layer, //Layer tanks will be displayed in.
+					"x": 100, 	//X position of sprite
+					"y": 100, 	//Y position of sprite
+					"w": 36, 	//width of sprite.
+					"h": 59 	//height of sprite.
+				});
+
+				this.mytank.animation = scene.Cycle([[0,0,5],[37,0,5]]);
+				this.mytank.animation.addSprite(this.mytank);
+				//Create our turret sprite
+				this.myturret = this.scene.Sprite("tank.png",{
+					"layer": this.layer, //Layer tanks will be displayed in.
+					"x": 100, 	//X position of sprite
+					"y": 100, 	//Y position of sprite
+					"w": 36, 	//width of sprite.
+					"h": 59, 	//height of sprite.
+					"xoffset":75, // x offset
+					"yoffset":0, //y offset
+				});
+
+				//Create missile sprite
+				this.fireMissile = function(){
+					//Get angle
+					var a = this.myturret.angle;
+					//Figure out where the missile should be, in order to
+					//align with turrets cannon
+					var x = (this.mytank.x+(this.mytank.w/2))+ (28 * Math.sin(a));
+					var y = (this.mytank.y+(this.mytank.h/2))+ (28 * Math.cos(a))*-1;
+					//Create the sprite
+					missile = this.scene.Sprite("missile.png",{
+						"layer": this.layer,
+						"w":4,
+						"h":11,
+						"angle": a,
+						"x": x,
+						"y": y
+
+					});
+					//Add it to the sprites array
+					this.missiles.push(missile);
+
+				}
+				this.updateMissiles = function(){
+					this.missiles.forEach(function(m){
+						//Get new X and new Y
+						var x = m.x+ (6 * Math.sin(m.angle));
+						var y = m.y+ (6 * Math.cos(m.angle))*-1
+						//Update sprite
+						m.position(x,y);
+						m.update();
+
+						//remove it if it leaves game area
+						if(!(
+							(m.x>0 && m.x < m.layer.w) &&
+							(m.y>0 && m.y < m.layer.h)
+						)
+						){
+							m.remove();
+							engine.missiles.splice(engine.missiles.indexOf(m),1);
+						}
+					});
+
+				}
+				
+				//Add set ticker method to Engine
+				this.setTicker = function(ticker){
+					this.ticker = ticker;
+				}
+				
+				var speed =0;
+				//Create run method which will be called each time the 
+				//game loop runs.
+				this.run = function(){
+				
+					//Get tankss current x and y.
+					nx = this.mytank.x;
+					ny = this.mytank.y;
+					ang = this.mytank.angle;
+
+					//Update it depending on which keys are pressed.
+					if(this.inputs.keyboard.left){
+						ang = (-2*(Math.PI/180))+ang;
+					}
+					if(this.inputs.keyboard.right){
+						ang = (2*(Math.PI/180))+ang;
+					}
+					if(this.inputs.keyboard.up){
+						if(speed<5) speed = speed+0.2;
+					}else{
+						//Apply friction
+						if(speed>0) speed = speed-0.1;
+						if(speed<0) speed = speed+0.1;
+					}
+
+					if(this.inputs.keyboard.down){
+						if(speed>0) speed -= 0.5;
+						if(speed<0) speed = 0;
+					}
+					nx += (speed * Math.sin(ang));
+					ny += (speed * Math.cos(ang))*-1;
+						
+					//Ensure new X position is inside playable area	
+					if(nx < 0 || (nx + this.mytank.w) > this.layer.w){
+						speed = -(speed*0.4);
+						nx = this.mytank.x;
+					}
+					//Ensure new Y position is inside playable area	
+					if(ny < 0 || (ny + this.mytank.h) > this.layer.h){
+						speed = -(speed*0.4);
+						ny = this.mytank.y;
+					}
+
+					if(this.inputs.mouse.click) this.fireMissile();	
+					
+
+						
+					//Tell the tank
+					this.mytank.position(nx,ny);
+					this.mytank.setAngle(ang);
+					//this.mytank.offset(0,0);
+					if(speed > 0.05) this.mytank.animation.next().update();
+
+					//Apply the changes to tank
+					this.mytank.update();
+
+					//Get center point for the tank
+					tank_cent_y = this.mytank.y+(this.mytank.h/2);
+					tank_cent_x = this.mytank.x+(this.mytank.w/2);
+					//Work out angle cursor is from tank.
+					cursorAngle = Math.atan2(
+						(this.inputs.mouse.position.y
+						-tank_cent_y),
+						(this.inputs.mouse.position.x
+						-tank_cent_x)
+					 )+1.571;//Add roughly 90 degrees.
+
+					//Apply same movements to turret
+					this.myturret.position(nx,ny);
+					this.myturret.setAngle(cursorAngle);
+					this.myturret.update();
+
+					this.updateMissiles();
+					//if(missile != null) missile.update();
+				
+				}
+			}	
+			//Bootstap Game
+			var bootstrap = function(){
+				//Create new Sprite.js Scene (effectively the Canvas that sprite js draws on to)
+				var scene = sjs.Scene({'useWebGL':false ,'w':window.innerWidth, 'h':window.innerHeight});
+				var layer = scene.Layer("game_layer");
+				//Load images needed to display
+				scene.loadImages([
+					'tank.png'
+					 ], 
+				 function() {
+						//Create instance of Engine (class i'm using to run the game)
+						engine = new Engine(scene, layer);
+						//Setup game loop via Sprite.js's ticker (calls engine's run method)
+						ticker = scene.Ticker(function() { engine.run(); });
+						//Pass ticker to engine
+						engine.setTicker(ticker);
+						//Start the ticker
+						ticker.run();
+					});
+			}
+			//Bootstap Game (when page is loaded)
+			window.addEventListener("load", bootstrap, false);
+		</script>
+
+	</head> 
+	<body> 
+		<div id='game_map'>
+		
+		
+		</div>
+	</body> 
+</html> 

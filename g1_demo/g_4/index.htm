@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head> 
+		<title>Test Game 4</title> 
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+		<style type="text/css"> 
+			  body {margin:0;padding:0; background-color: #629632;}
+			  div {margin:0 auto;max-width:1280px;}
+		</style> 
+		<script type="text/javascript" src='../vendor/sprite.js'></script> 
+		<script type="text/javascript">
+		
+		var tank, turret;
+			//Create Engine Class
+			function Engine(scene, layer){
+				//store scene and layer for later
+				this.scene = scene;
+				this.layer = layer;
+				this.inputs = scene.Input();
+				
+				//Create our sprite
+				tank = this.mytank = this.scene.Sprite("tank.png",{
+					"layer": this.layer, //Layer tanks will be displayed in.
+					"x": 100, 	//X position of sprite
+					"y": 100, 	//Y position of sprite
+					"w": 36, 	//width of sprite.
+					"h": 59 	//height of sprite.
+				});
+				//Create our turret sprite
+				turret = this.myturret = this.scene.Sprite("tank.png",{
+					"layer": this.layer, //Layer tanks will be displayed in.
+					"x": 100, 	//X position of sprite
+					"y": 100, 	//Y position of sprite
+					"w": 36, 	//width of sprite.
+					"h": 59, 	//height of sprite.
+					"xoffset":75, // x offset
+					"yoffset":0, //y offset
+				});
+				
+				//Add set ticker method to Engine
+				this.setTicker = function(ticker){
+					this.ticker = ticker;
+				}
+				
+				var speed =0;
+				//Create run method which will be called each time the 
+				//game loop runs.
+				this.run = function(){
+				
+					//Get tankss current x and y.
+					nx = this.mytank.x;
+					ny = this.mytank.y;
+					ang = this.mytank.angle;
+
+					//Update it depending on which keys are pressed.
+					if(this.inputs.keyboard.left){
+						ang = (-2*(Math.PI/180))+ang;
+					}
+					if(this.inputs.keyboard.right){
+						ang = (2*(Math.PI/180))+ang;
+					}
+					if(this.inputs.keyboard.up){
+						if(speed<5) speed = speed+0.2;
+					}else{
+						//Apply friction
+						if(speed>0) speed = speed-0.1;
+						if(speed<0) speed = speed+0.1;
+					}
+
+					if(this.inputs.keyboard.down){
+						if(speed>0) speed -= 0.5;
+						if(speed<0) speed = 0;
+					}
+					nx += (speed * Math.sin(ang));
+					ny += (speed * Math.cos(ang))*-1;
+						
+					//Ensure new X position is inside playable area	
+					if(nx < 0 || (nx + this.mytank.w) > this.layer.w){
+						speed = -(speed*0.4);
+						nx = this.mytank.x;
+					}
+					//Ensure new Y position is inside playable area	
+					if(ny < 0 || (ny + this.mytank.h) > this.layer.h){
+						speed = -(speed*0.4);
+						ny = this.mytank.y;
+					}
+						
+					//Tell the tank
+					this.mytank.position(nx,ny);
+					this.mytank.setAngle(ang);
+					this.mytank.offset(0,0);
+
+					//Apply the changes to tank
+					this.mytank.update();
+
+					//Apply same movements to turret
+					this.myturret.position(nx,ny);
+					this.myturret.setAngle(ang);
+					this.myturret.update();
+				
+				}
+			}	
+			//Bootstap Game
+			var bootstrap = function(){
+				//Create new Sprite.js Scene (effectively the Canvas that sprite js draws on to)
+				var scene = sjs.Scene({'w':window.innerWidth, 'h':window.innerHeight});
+				var layer = scene.Layer("game_layer");
+				//Load images needed to display
+				scene.loadImages([
+					'tank.png'
+					 ], 
+				 function() {
+						//Create instance of Engine (class i'm using to run the game)
+						engine = new Engine(scene, layer);
+						//Setup game loop via Sprite.js's ticker (calls engine's run method)
+						ticker = scene.Ticker(function() { engine.run(); });
+						//Pass ticker to engine
+						engine.setTicker(ticker);
+						//Start the ticker
+						ticker.run();
+					});
+			}
+			//Bootstap Game (when page is loaded)
+			window.addEventListener("load", bootstrap, false);
+		</script>
+
+	</head> 
+	<body> 
+		<div id='game_map'>
+		
+		
+		</div>
+	</body> 
+</html> 

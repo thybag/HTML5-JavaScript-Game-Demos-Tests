@@ -1,0 +1,97 @@
+/* Game Styles */
+body { 
+	background-color: #222222;
+	margin:0;
+	padding:0;
+	font-family: arial, Helvetica,sans-serif; 	
+}
+#world{ 
+	background-color: #000;
+	overflow:hidden; 
+	position:absolute; 
+	left:10px;
+	top:10px;
+}
+.zone {  	
+	position:absolute; 
+}
+.star{
+	color:#fff;
+	position:absolute;
+	width:5px;
+	height:5px;
+}
+.starTile {
+	/*border: 1px solid red; */
+}
+
+#missiles {
+	position:absolute;
+	top:0;
+	left:0;
+	padding:0;
+	margin:0;
+	width:100px;
+	height:100px;
+	
+}
+/*
+canvas { border: 1px solid red; }
+*/
+/* Welcome Styles */
+#velcome { 
+	margin: 50px auto; 
+	background-color:#fff;
+	padding:20px;
+	width:700px;
+	
+	-webkit-border-radius: 20px;
+	-o-border-radius: 20px;
+	-moz-border-radius: 20px;
+	border-radius: 20px;
+}
+#velcome h1 {
+	padding:0;
+	margin:0;
+	font-size:1.6em;
+}
+#velcome p {font-size:1.1em; padding:0;}
+#velcome .now {
+	height:120px;
+	margin-top:40px;
+	background-color:#F1F1F1; 
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F1F1F1', endColorstr='#ffffff'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#F1F1F1), to(#ffffff)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #F1F1F1,  #fff); /* for firefox 3.6+ */ 
+	padding:4px;
+}
+#velcome .now p {
+	font-size:0.8em;
+	margin:5px;
+}
+#velcome .now a.big {
+	display:block;
+	margin:10px auto 20px auto;
+	width:120px;
+	background-color:#DFFFA5; 
+	text-align:center;
+	padding-top:3px;
+	padding-bottom:3px;
+	font-size:1.5em;
+	color:#000;
+	text-decoration:none;
+	border: solid 2px #000;
+	-webkit-border-radius: 10px;
+	-o-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	 
+}
+#velcome .now a.big:hover {
+	background-color:#ADFF2F; 
+	-webkit-transition: background 600ms ease-in;
+	-moz-transition: background 600ms ease-in;
+	-o-transition: background 600ms ease-in;
+	transition: background 600ms ease-in;
+}
+#velcome .center {text-align:center;}

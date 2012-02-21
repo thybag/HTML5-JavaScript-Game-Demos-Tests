@@ -1,0 +1,394 @@
+Hello, welcome to the (Somewhat overdue) second part of my "Making HTML5 games by someone who knows pretty much nothing about making games" series. If you've not read the first part ( <a href="http://userbag.co.uk/development/making-html5-games-by-someone-who-knows-nothing-about-making-games/">see here</a> ) then it's probably a good idea to check that out first as the plan is to try and continue from where I left off. If you want to jump right in you can grab a copy of the code produced previously <a href="http://userbag.co.uk/demo/g1_demo/g_3/">here</a>.
+
+So, just as a recap, the "game" if it can be called that at this stage is being build using the <a href="https://github.com/batiste/sprite.js/">Sprite.js</a> framework and currently consists of a black screen and an ugly looking triangle, which can be controlled using both the arrow and wasd keys. In order to try and bring the "game" closer to something worthy of that description, the next logical step is to start adding a few more features to our game. Shooting, bad guys, stuff like that.
+
+To do this, its probably a good idea to figure out exactly what kind of game we are planning to make, and thus which features its going to need. In the previous tutorial, I'd kinda been thinking of creating a space style shooter, although, to be honest, I don't really think the movement method fits to well with that. Additionally, I feel like trying something a bit different.
+
+So what's the new plan?
+
+"Tank Combat", Use a tank to fight of the evil aliens invaders.
+
+The main aim of this tutorial is to create the above game, with the following 4 key features;
+<ul>
+	<li>The ability to drive the tank with the arrow and wasd keys.</li>
+	<li>The ability to aim and shoot using the mouse.</li>
+	<li>To have some sort of enemy to fight.</li>
+	<li>To have some graphics that actually fit the new game idea.</li>
+</ul>
+Given this, I think the first step is to start bringing our existing "game" in to line with the new vision
+To start, I've created a new "tank" sprite (just a really basic pixel tank).
+<div class="centre_zone"><img src="http://userbag.co.uk/demo/g1_demo/g_7/tank.png" alt="Tank Sprite" /></div>
+The tank sprite consist's of 3 panels. The first two display the tank body at different stages of movement (Basically the tracks move slightly) and the 3rd shows the tanks turret, which needs to be separate from the body so we can position and rotate it separately.
+
+To add the sprite in to the game, we will need to update our "ship" sprite definition. I'll also rename "ship" to "tank" while here, just to avoid confusion. (Remember in addition to changing the sprite file, its also important to update the sprite definition with the new sprites width and height.)
+<pre class="brush: javascript; gutter: true">tank = this.mytank = this.scene.Sprite("tank.png",{
+	"layer": this.layer, //Layer tanks will be displayed in.
+	"x": 100, 	//X position of sprite
+	"y": 100, 	//Y position of sprite
+	"w": 36, 	//width of sprite.
+	"h": 59 	//height of sprite.
+});</pre>
+To go with the new sprite, you may also want to change the game's background colour from black to green (like grass) so it fits a little better with the new theme.
+
+Although the tank sprite is now in the game, its movement still feels a little wrong, since it was originally set up on the premise that we were going to be controlling a space ship. Because of this I think its worth spending a little time tweaking the way our sprite moves. To start friction plays a much bigger role when not in space, so to replicate this I've added an else, to slow the tank down when not accelerating and, in addition I also lowered the acceleration speed from 0.5 to +0.2.
+<pre class="brush: javascript; gutter: true">if(this.inputs.keyboard.up){
+	if(speed&lt;5) speed = speed+0.2;
+}else{
+	//Apply friction
+	if(speed&gt;0) speed = speed-0.1;
+}</pre>
+While we are playing with movement, it's also good time to add some code to stop the tank constantly flying of the screen as you drive around. To do this, in its simplest form, we just need to put a check in, to see whether or not the x &amp; y coordinates the tank is moving too, is within the current scene (on screen essentially) and if so, stop that movement being applied.
+
+To do this add something along the lines of this just above where the actions are being applied to the sprite (just before the "//Tell the ship")
+<pre class="brush: javascript; gutter: true">	//Ensure new X position is inside playable area
+	if(nx &lt; 0 || (nx + this.mytank.w) &gt; this.layer.w){
+		nx = this.mytank.x;
+	}
+	//Ensure new Y position is inside playable area
+	if(ny &lt; 0 || (ny + this.mytank.h) &gt; this.layer.h){
+		ny = this.mytank.y;
+	}</pre>
+With a little luck you should find that you are no longer able to drive your tank outside of the game area. While this gets the job done, it (for me at least) feels a little clunky. My solution to this was simply to swap the outright stop effect out for a bounce effect instead. The new code looks as follows;
+<pre class="brush: javascript; gutter: true">	//Ensure new X position is inside playable area
+	if(nx &lt; 0 || (nx + this.mytank.w) &gt; this.layer.w){
+		speed = -(speed*0.4);
+		nx = this.mytank.x;
+	}
+	//Ensure new Y position is inside playable area
+	if(ny &lt; 0 || (ny + this.mytank.h) &gt; this.layer.h){
+		speed = -(speed*0.4);
+		ny = this.mytank.y;
+	}</pre>
+It works in a very similar way to simple stop effect, except rather than simply stopping the ship it also reverses the ships momentum at the same time.
+
+Now that its possible for the tank to have negative movement though, we need to ensure we still apply friction as the current system is only doing this for positive speed. The solution, is fairly simple though. We just need to add a check for if speed is less than zero when not accelerating, and then add to it until its zero again.
+<pre class="brush: javascript; gutter: true">if(this.inputs.keyboard.up){
+	if(speed&gt;0) speed = speed-0.1;
+	if(speed&lt;0) speed = speed+0.1;
+}</pre>
+The conversion of our existing stuff to a tank game is now nearly complete. To finish it off we now need to add are tanks turret &amp; also, have a quick go at animating are tire tracks.
+
+Adding the turret in a basic way should be fairly simple, so for now, lets just create a new sprite to be the turret (ensuring we have the correct offset's).
+<pre class="brush: javascript; gutter: true">turret = this.myturret = this.scene.Sprite("tank.png",{
+	"layer": this.layer, //Layer tanks will be displayed in.
+	"x": 100, 	//X position of sprite
+	"y": 100, 	//Y position of sprite
+	"w": 36, 	//width of sprite.
+	"h": 59, 	//height of sprite.
+	"xoffset":75,
+	"yoffset":0,
+	});</pre>
+And then add some code to keep its position in sync with the main tank, under the "mytank.update()"
+<pre class="brush: javascript; gutter: true">this.myturret.position(nx,ny);
+this.myturret.setAngle(ang);
+this.myturret.update();</pre>
+With a little luck you should now have something along the lines of this:
+<div class="centre_zone"><a href="http://userbag.co.uk/demo/g1_demo/g_4/">Click to view demo 4</a></div>
+The next step is to start having a look in to adding some of the new features, needed to make the proposed tank game a little more game like. To start with, getting the turret working so we can aim it, and eventually get it to fire stuff at whoever the badguys in the game turn out to be.
+
+As with the keyboard inputs, getting the mouse position in Sprite.JS is fairly simple and is somthing we can just ask the inputs object to give us. From this and the tanks X,Y figuring out which way our turret needs to be angled to fire where we point shouldn't actually be all that difficult (thanks to a handy little function called atan2).
+<pre class="brush: javascript; gutter: true">//Get center point for the tank
+tank_cent_y = this.mytank.y+(this.mytank.h/2);
+tank_cent_x = this.mytank.x+(this.mytank.w/2);
+//Work out angle cursor is from tank.
+cursorAngle = Math.atan2(
+	(this.inputs.mouse.position.y - tank_cent_y),
+	(this.inputs.mouse.position.x - tank_cent_x)
+ )+1.571;//Add roughly 90 degrees.</pre>
+Now we have the angle, we can just give the myturrent.SetAngle method our new cusor angle rather than the motion angle we were using before.
+<pre class="brush: javascript; gutter: true">this.myturret.setAngle(cursorAngle);</pre>
+Now we can aim our tank, i think the next thing to do is probably give it the ability to fire. As with everything else so far, first thing is to create the missile sprite, for laziness i just went with another quick paint.exe job:
+
+Getting it in to the game though will be a little different to how the tank/turret were added, as unlike them, chances are we are going to want lots of missiles, not just the one. Thus rather than storing each missile individually it makes a lot more scene to keep track of them with an array.
+
+To do this i just added a defined a variable's to hold our missiles array at the top of the engine object.
+<pre class="brush: javascript; gutter: true">this.missiles = [];</pre>
+Next, we want to create a function we can call every time the tank fires to create us a new missile. For simplicity sake i just called mine fireMissile.
+<pre class="brush: javascript; gutter: true">this.fireMissile = function(){
+	//Code here
+}</pre>
+Then within this we need to create the new missile sprite &amp; add the result to our missiles array
+<pre class="brush: javascript; gutter: true">missile = this.scene.Sprite("missile.png",{
+	"layer": this.layer,
+	"w":4,
+	"h":11,
+	"angle": 0,
+	"x": 0,
+	"y": 0
+
+});
+this.missiles.push(missile);</pre>
+which is again, fairly straight forward. The complex bit here is now going to be working out where the missile the missile needs to be placed, in order to fire from our tanks turret. Getting the angle is the simplest task here as we can just grab the turret rotation directly and use that.
+<pre class="brush: javascript; gutter: true">var a = this.myturret.angle;</pre>
+While the x and y are a little more complex, as although we could just grab the tanks x and y and use that, a missile suddenly appearing in the middle of the tank and flying out doesn't really make much scene. So instead, we need to figure out the coordinates of the position 30 or so pixels in front of that point.
+
+To start though, we are still going to need to get the centre point.
+<pre class="brush: javascript; gutter: true">x = this.mytank.x+(this.mytank.w/2);
+y = this.mytank.y+(this.mytank.h/2);</pre>
+Given that we can now use the same bit of math we do to calculate tank moment, to figure out where are missile should be in 30 pixels time. (Although i ended up tweaking this to 28 as it fitted a little better)
+
+My resulting fireMissile function ended up looking pretty much like this:
+<pre class="brush: javascript; gutter: true">this.fireMissile = function(){
+	var a = this.myturret.angle;
+	var x = (this.mytank.x+(this.mytank.w/2))+ (28 * Math.sin(a));
+	var y = (this.mytank.y+(this.mytank.h/2))+ (28 * Math.cos(a))*-1;
+	missile = this.scene.Sprite("missile.png",{
+		"layer": this.layer,
+		"w":4,
+		"h":11,
+		"angle": a,
+		"x": x,
+		"y": y
+	});
+	this.missiles.push(missile);
+
+}</pre>
+In order to make clicking actually call the function, i then added the following line under the rest of the movement/input code in the run function.
+<pre class="brush: javascript; gutter: true">if(this.inputs.mouse.click) this.fireMissile();</pre>
+At this point you will probably notice that none of the missile sprites added to the game are actually showing up yet, this is because we haven't yet added a mechanism to update the spites yet.
+
+To do this the easiest option is to again create an addition function, then ensure its called ever time the run loop runs, by adding code such as the following to the bottom of the run function.
+<pre class="brush: javascript; gutter: true">this.updateMissiles();</pre>
+Creating the method to actually update the sprites is additionally not as hard as it first looks, utilising the same moment code used to drive the tank and position missiles initially, there isn't really a whole lot of new code that needs writing.
+<pre class="brush: javascript; gutter: true">this.updateMissiles = function(){
+	this.missiles.forEach(function(m){
+		var x = m.x+ (6 * Math.sin(m.angle));
+		var y = m.y+ (6 * Math.cos(m.angle))*-1
+		m.position(x,y);
+		m.update();
+	});
+}</pre>
+Essentially the above code just loops over the missiles store in the this.missiles array, calculates there next position then updates the sprite.
+
+Although this works fine, its probably a good idea to add a little bit of functionality to clean up sprites we no longer need, as once a sprite leaves the game area there's not a lot of point keeping it updated, or indeed, in the game at all.
+
+Since to do this we will need to be able to remove sprites from the this.missiles array in engine, we will need to ensure engine is available outside the scope of our engine object. (As the .forEach() method will put us in its own scope). To do this simply define a var called engine outside of the engine function.
+
+To calculate weather or not we now want to remove a missile, we will need to get its x and y position and check there are both above 0 and not beyond the width or height of our game area. If it is, we then will want to call remove() on the sprite itself and then remove the item from our missiles array.
+<pre class="brush: javascript; gutter: true">if(!(
+	(m.x&gt;0 &amp;&amp; m.x &lt; m.layer.w) &amp;&amp;
+	(m.y&gt;0 &amp;&amp; m.y &lt; m.layer.h)
+)){
+	m.remove();
+	engine.missiles.splice(engine.missiles.indexOf(m),1);
+}</pre>
+You should now have a game that resembles the following:
+<div class="centre_zone"><a href="http://userbag.co.uk/demo/g1_demo/g_5/">Click to view demo 5</a></div>
+So we have a tank, we can drive around and we can shoot missiles. I guess the next thing on the list is to create something to fight with. To start I quickly created a new sprite to use as our "bad guy aliens".
+<div class="centre_zone"><img src="http://userbag.co.uk/demo/g1_demo/g_7/slug.png" alt="Tank Sprite" /></div>
+Then i added a additional array to our engine object so we have somewhere to keep track of them (Essentially that are going to work in much the same way that missiles do now).
+
+So under our this.missiles array, add a:
+<pre class="brush: javascript; gutter: true">this.monsters = [];</pre>
+Then create the outline of your new spawnMonster (in this case spawnSlug) and updateMonster methods.
+<pre class="brush: javascript; gutter: true">this.spawnSlug = function(x,y){
+//stuff here
+}
+this.updateMonsters = function(){
+//stuff here
+}</pre>
+Creating the monster itself, is almost exactly the same as how we create missiles. Firstly we setup our monster sprite and then we just add it to our monsters array.
+The angle itself doesn't really matter so I've just set it as one, and the x and y coordinates to spawn our new slug are passed in as parameters
+<pre class="brush: javascript; gutter: true">this.spawnSlug = function(x,y){
+	slug = this.scene.Sprite("slug.png",{
+		"layer": this.layer,
+		"w":16,
+		"h":39,
+		"angle": 1,
+		"x": x,
+		"y": y
+	});
+	this.monsters.push(slug);
+}</pre>
+Since our slug sprite has a few steps of animation, its also a good time to use sprite.js's Cycle method, which essentially allows us to easily animate our sprite using the sprite panel we created. This is done by providing an array of steps, each consisting of the x and y offset we should apply to our sprite panel and the duration each panel should display for. Once setup the cycle can then be attached to the slug sprite.
+
+In order to keep track of the new Cycle object, I've chosen to store it within the Sprite object itself in an attribute called animation.
+<pre class="brush: javascript; gutter: true">//Create slug sprite
+this.spawnSlug = function(x,y){
+	slug = this.scene.Sprite("slug.png",{
+		"layer": this.layer,
+		"w":16,
+		"h":39,
+		"angle": 1,
+		"x": x,
+		"y": y
+	});
+	//setup animation.
+	slug.animation = scene.Cycle([
+		[0,0,5],
+		[16,0,5],
+		[32,0,5],
+		[48,0,5],
+		[32,0,5],
+		[16,0,5]
+	]).addSprite(slug);
+	this.monsters.push(slug);
+}</pre>
+Now we can create the slug sprite, the next step is to do something with them once they are in the game. As with the missiles this is done by iterating through the list of monsters and applying certain actions to each, before finally updating the sprite.
+<pre class="brush: javascript; gutter: true">this.updateMonsters = function(){
+	//Loop through each monster sprite
+	this.monsters.forEach(function(m){
+		m.animation.next().update();
+	});
+}</pre>
+Its useful to note that if you call update on a cycle (as stored in the m.animation) you no longer need to call update on the Sprite itself in order to apply movement/rotation. We can now start adding some behaviours to our monster, for example making them slowly advance towards the player. Using atan2 we can easily figure out which direction our sprite needs to travel in in order to find our tank (in the same way that we did when worked out which direction to point our turret.)
+<pre class="brush: javascript; gutter: true">var a = Math.atan2(
+	(engine.mytank.y-m.y),
+	(engine.mytank.x-m.x)
+)+1.571;//90 degrees</pre>
+Using this angle we can then point our sprite towards the tank and, then using the movement code now powering both the tank itself and its missiles, give our monsters the ability to move too. The full code may look something like.
+<pre class="brush: javascript; gutter: true">this.updateMonsters = function(){
+	//Loop through each monster sprite
+	this.monsters.forEach(function(m){
+		var a = Math.atan2(
+			(engine.mytank.y-m.y),
+			(engine.mytank.x-m.x)
+		)+1.571;
+		//Work out new location
+		var x = m.x+ (1 * Math.sin(a));
+		var y = m.y+ (1 * Math.cos(a))*-1;
+		//Apply changes
+		m.position(x,y);
+		m.setAngle(a)
+		m.animation.next().update();
+	});
+}</pre>
+In order to test that everything is now working as we expect, its probably worth adding the ability for our game to spawn these monsters at this stage. To do this i added the simple code in to the run function of our game. The result is that every 200th tick of our game loop, a new slug will spawn, and with luck head towards our tank.
+<pre class="brush: javascript; gutter: true">if((engine.ticker.currentTick % 200)==0){
+	this.spawnSlug(400,-50);
+}</pre>
+Having monsters that want to eat our tank is all well and good, but not a lot of fun if we can't shoot them. To start, add a hp variable to your tank sprite (i set mine to have)
+<pre class="brush: javascript; gutter: true">this.mytank.hp = 5;</pre>
+And the same to your monsters, within the spawnSlug method. (I gave mine 2 hp)
+<pre class="brush: javascript; gutter: true">slug.hp = 2;</pre>
+Now comes the hard part, collision detection, fortunately for us, we don't need to worry to much about this though. Sprite.js helpfully comes packaged with its own collision detection system, stored in lib/collison.js . Adding this to our game, suddenly adds a host of useful "collidesWith" style methods for detecting collisions.
+<pre class="brush: javascript; gutter: true">&lt;script type="text/javascript" src='../vendor/lib/collision.js'&gt;&lt;/script&gt;</pre>
+To make use of this, navigate back in to your "updateMonsters" method and under the code to apply sprite changes, add:
+<pre class="brush: javascript; gutter: true">//Detect collisions
+col = m.collidesWithArray(engine.missiles);
+if(col !== false){ //false means there were no collisions
+	//Take 1 hp away from this monster.
+	m.hp--;
+	//If monster has less than 1 hp (0), remove it from the game.
+	if(m.hp &lt; 1){
+		//Remove sprite
+		m.remove();
+		//remove fictional sprite from our array
+		engine.monsters.splice(engine.monsters.indexOf(m),1);
+	}
+	//remove missile
+	col.remove();
+	//remove missile from our array
+	engine.missiles.splice(engine.missiles.indexOf(col),1);
+}</pre>
+Essentally the above code checks to see weather the current monster, has collided with any of the missiles within the missiles array, if not the "m.collidesWithArray()" returns false and no changes take place.
+
+Alternately, if there was a collision between the current monster and a missile, 1 hp is removed from the monster and a check is done to ensure the monsters hp is not below 1 (as in 0), if it is, the monster is removed from the game.
+
+Once this is complete, the missile that hit the monster is also removed from the game, regardless of weather the monster was killed.
+
+If you play the game now, you should find you are able to shoot the slug monsters as they come towards you.
+
+In order to make the game more interesting though, its worth adding a little danger to yourself as well. Under the above collision code, add:
+<pre class="brush: javascript; gutter: true">//Has a monster got to your tank?
+col_me = m.collidesWith(engine.mytank);
+if(col_me !== false){
+	//If so, remove the monster, and take 1hp away from your tank
+	m.remove();
+	engine.monsters.splice(engine.monsters.indexOf(m),1);
+	engine.mytank.hp--;
+	//Check to see if the tank is dead?
+	if(engine.mytank.hp</pre>
+This code essentially does the same thing as the previous collision, except checking for collisions between the current monster, and your tank. Additionally if your tank runs out of hp, it ends the game loop and displays a game warning notice.
+
+Finally, before this step of the game can be called complete, I think its also worth adding a slightly better spawning mechanism, just to make the direction the monsters come from a little less predictable, and to hopefully add a slowly increasing difficulty to the game.
+
+Create a new function called spawnMonster, with code that looks something like;
+<pre class="brush: javascript; gutter: true">this.spawnMonster = function(){
+	//50% chance of spawning top/bottom or left/right
+	if(Math.round(Math.random())==1){
+		//If left or right, randomly choose a height to attach
+		//our new monster at
+		h = Math.floor(Math.random()*this.layer.h);
+		if(Math.round(Math.random())==1){
+			//attach right
+			this.spawnSlug(this.layer.w+50,h);
+		}else{
+			//attach left
+			this.spawnSlug(-50,h);
+		}
+	}else{
+		//if top/bottom, figure out what width to add our sprite
+		//at
+		w = Math.floor(Math.random()*this.layer.w);
+		if(Math.round(Math.random())==1){
+			//at bottom
+			this.spawnSlug(w,this.layer.h+50);
+		}else{
+			//at top
+			this.spawnSlug(w,-50);
+		}
+	}
+}</pre>
+The above code should randomly pick an area around the edge of the current game to spawn a new monster in when called.
+
+Now go to the run function and just above it where the speed variable is defined, define a second one and call it spawnrate and set it to 200. Now within the run method itself, replace the previous monster spawning code with:
+<pre class="brush: javascript; gutter: true">//Spawn monster every time tick is a multiple of spawnrate
+if((this.ticker.currentTick % spawnrate)==0){
+	//If spawn rate is higher than 20, decrese it by 2.
+	if(spawnrate&gt;20) spawnrate=spawnrate-2;
+	//Spawn a monster somewhere
+	this.spawnMonster();
+}</pre>
+The new code will call the this.spawnMonster to create a new slug in a random location, every time the ticker equals a multiple of spawnrate. Additionally, each spawn, the time before the next spawn decreases slightly, meaning the monsters will begin to spawn at a faster and faster rate (until the maxim ever 20 ticks).
+
+Finally, make sure to add all the new sprite images to your scene.loadImages back in your bootstrap function.
+<pre class="brush: javascript; gutter: true">scene.loadImages([
+	'tank.png',
+	'slug.png',
+	'missile.png',
+	 ], function() {</pre>
+Hopefully, if everything went to play your game should now look and play something like this:
+<div class="centre_zone"><a href="http://userbag.co.uk/demo/g1_demo/g_6/">Click to view demo 6</a></div>
+Now the games more a less playable and pretty much all our original goals have been completed, I just wanted to add a few final tweaks, just to make the game that little bit more enjoyable. 90% of this change just being the addition of a Score and visibility of your hp.
+
+To add the HP &amp; score box, i added the following html in to the page (under the game_map)
+<pre class="brush: html; gutter: true">&lt;div id='score_board'&gt;
+	&lt;div id='score'&gt;0&lt;/div&gt;
+	&lt;div &gt;Health: &lt;span id='hp'&gt;5&lt;/span&gt;/5&lt;/div&gt;
+&lt;/div&gt;</pre>
+Combined with the following CSS
+<pre class="brush: css; gutter: true">#score_board {position:absolute;width:100px;right:0;top:0;color:#fff;z-index:9999;}
+#score_board div {text-align:center;}
+#score{font-size:5em;font-weight:bold;}</pre>
+Now, to make both the HP &amp; score counter work, add a score attribute to the main game object (below this.inputs etc)
+<pre class="brush: javascript; gutter: true">this.score = 0;</pre>
+Then in the updateMonsters method, just below were we removed detroyed monsters from the game, add the following code.
+<pre class="brush: javascript; gutter: true">engine.score++;
+document.getElementById('score').innerHTML = engine.score;</pre>
+Then, under this where hp is being deducted by your own tank (just under "engine.mytank.hp--;") add
+<pre class="brush: javascript; gutter: true">document.getElementById('hp').innerHTML = engine.mytank.hp;</pre>
+to keep your HP in sync with the UI.
+
+And last but not least, to make the loosing screen a little less annoying, replace the "game over" alert with:
+<pre class="brush: html; gutter: true">document.body.innerHTML ='&lt;div class="end"&gt;&lt;h1&gt;Game Over!&lt;/h1&gt;&lt;div&gt;Your Score: '+engine.score+'&lt;/div&gt;&lt;/div&gt;';</pre>
+And add the following bit of additional css to your styles
+<pre class="brush: css; gutter: true">.end {
+	background-color:#fff;
+	color:#000;
+	width:400px;
+	text-align:center;
+	margin-top:50px;
+	padding:10px;
+}</pre>
+and then, for the purposes of this tutorial. Your done! Congratulation, you should now have a simple game that hopefully looks something like this.
+<div class="centre_zone"><a href="http://userbag.co.uk/demo/g1_demo/g_7/">Tank Combat: Final.</a></div>
+Feel free to continue developing, as there are a number of further features that could be added to vasty improve how fun it is to play. Some things you may want to consider adding:
+<ul>
+	<li>Sounds for firing the cannon, driving and blowing up monsters</li>
+	<li>Additional monsters, and maybe some smarter behaviours</li>
+	<li>High scores</li>
+	<li>Some terrain, to drive around</li>
+</ul>
+Thanks for reading,
+Carl.

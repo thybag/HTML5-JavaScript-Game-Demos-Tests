@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head> 
+		<title>Test Game 6</title> 
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+		<style type="text/css"> 
+			  body {margin:0;padding:0; background-color: #629632;}
+			  div {margin:0 auto;max-width:1280px;}
+
+			  
+		</style> 
+		<script type="text/javascript" src='../vendor/sprite.js'></script> 
+		<script type="text/javascript" src='../vendor/lib/collision.js'></script> 
+		<script type="text/javascript">
+		
+		var engine;//tank, turret, missile,
+			//Create Engine Class
+			function Engine(scene, layer){
+				//store scene and layer for later
+				this.scene = scene;
+				this.layer = layer;
+				this.inputs = scene.Input();
+				//Var to keep track of missiles.
+				this.missiles = [];
+				this.monsters = [];
+				
+				//Create our sprite
+				this.mytank = this.scene.Sprite("tank.png",{
+					"layer": this.layer, //Layer tanks will be displayed in.
+					"x": 100, 	//X position of sprite
+					"y": 100, 	//Y position of sprite
+					"w": 36, 	//width of sprite.
+					"h": 59 	//height of sprite.
+				});
+				this.mytank.hp = 5;
+				this.mytank.animation = scene.Cycle([[0,0,5],[37,0,5]]);
+				this.mytank.animation.addSprite(this.mytank);
+
+				
+				//slugAnim =
+				//Create our turret sprite
+				this.myturret = this.scene.Sprite("tank.png",{
+					"layer": this.layer, //Layer tanks will be displayed in.
+					"x": 100, 	//X position of sprite
+					"y": 100, 	//Y position of sprite
+					"w": 36, 	//width of sprite.
+					"h": 59, 	//height of sprite.
+					"xoffset":75, // x offset
+					"yoffset":0, //y offset
+				});
+
+				this.spawnSlug = function(x,y){
+					//Create slug sprite
+					slug = this.scene.Sprite("slug.png",{
+						"layer": this.layer,
+						"w":16,
+						"h":39,
+						"angle": 1,
+						"x": x,
+						"y": y
+
+					});
+					//Add slug "hp"
+					slug.hp = 2;
+					//Setup animtion
+					slug.animation = scene.Cycle([
+							[0,0,5],
+							[16,0,5],
+							[32,0,5],
+							[48,0,5],
+							[32,0,5],
+							[16,0,5]
+							]).addSprite(slug);
+					//Add to array.
+					this.monsters.push(slug);			
+				}
+				this.updateMonsters = function(){
+					//Loop through each monster sprite
+					this.monsters.forEach(function(m){
+						//Find angle to travel in.
+						var a = Math.atan2(
+							(engine.mytank.y-m.y),
+							(engine.mytank.x-m.x)
+							)+1.571;
+						//Work out new location
+						var x = m.x+ (1 * Math.sin(a));
+						var y = m.y+ (1 * Math.cos(a))*-1;
+						//Apply changes
+						m.position(x,y);
+						m.setAngle(a)
+						m.animation.next().update();
+						//Detect collisions
+						col = m.collidesWithArray(engine.missiles);
+						if(col !== false){ //false means there were no collisions
+							//Take 1 hp away from this monster.
+							m.hp--;
+							//If monster has less than 1 hp (0), remove it from the game.
+							if(m.hp < 1){
+								//Remove sprite
+								m.remove();
+								//remove fictional sprite from our array
+								engine.monsters.splice(engine.monsters.indexOf(m),1);
+							}
+							//remove missile
+							col.remove();
+							//remove missile from our array
+							engine.missiles.splice(engine.missiles.indexOf(col),1);
+
+						}
+						//Has a monster got to your tank?
+						col_me = m.collidesWith(engine.mytank);
+						if(col_me !== false){
+							//If so, remove the monster, and take 1hp away from your tank
+							m.remove();
+							engine.monsters.splice(engine.monsters.indexOf(m),1);
+							engine.mytank.hp--;
+							//Check to see if the tank is dead?
+							if(engine.mytank.hp<1){
+								engine.ticker.pause();
+								alert("game over");
+							}
+
+						}
+					});
+				}
+				this.spawnMonster = function(){
+					//50% chance of spawning top/bottom or left/right
+					if(Math.round(Math.random())==1){
+						//If left or right, randomly choose a height to attach
+						//our new monster at
+						h = Math.floor(Math.random()*this.layer.h);
+						if(Math.round(Math.random())==1){
+								//attach right
+								this.spawnSlug(this.layer.w+50,h);
+						}else{
+								//attach left
+								this.spawnSlug(-50,h);
+						}
+					}else{
+						//if top/bottom, figure out what width to add our sprite
+						//at
+						w = Math.floor(Math.random()*this.layer.w);
+						if(Math.round(Math.random())==1){
+							//at bottom
+							this.spawnSlug(w,this.layer.h+50);
+						}else{
+							//at top
+							this.spawnSlug(w,-50);
+						}
+					}
+				}
+				
+				//Create missile sprite
+				this.fireMissile = function(){
+
+
+
+					//Get angle
+					var a = this.myturret.angle;
+					//Figure out where the missile should be, in order to
+					//align with turrets cannon
+					var x = (this.mytank.x+(this.mytank.w/2))+ (28 * Math.sin(a));
+					var y = (this.mytank.y+(this.mytank.h/2))+ (28 * Math.cos(a))*-1;
+					//Create the sprite
+					missile = this.scene.Sprite("missile.png",{
+						"layer": this.layer,
+						"w":4,
+						"h":11,
+						"angle": a,
+						"x": x,
+						"y": y
+
+					});
+					//Add it to the sprites array
+					this.missiles.push(missile);
+
+				}
+				this.updateMissiles = function(){
+					this.missiles.forEach(function(m){
+						//Get new X and new Y
+						var x = m.x+ (6 * Math.sin(m.angle));
+						var y = m.y+ (6 * Math.cos(m.angle))*-1
+						//Update sprite
+						m.position(x,y);
+						m.update();
+
+						//remove it if it leaves game area
+						if(!(
+							(m.x>0 && m.x < m.layer.w) &&
+							(m.y>0 && m.y < m.layer.h)
+						)
+						){
+							m.remove();
+							engine.missiles.splice(engine.missiles.indexOf(m),1);
+						}
+					});
+
+				}
+				
+				//Add set ticker method to Engine
+				this.setTicker = function(ticker){
+					this.ticker = ticker;
+				}
+				
+				var speed =0,spawnrate = 200;
+				//Create run method which will be called each time the 
+				//game loop runs.
+				this.run = function(){
+				
+					//Spawn monster every time tick is a multiple of spawnrate
+					if((this.ticker.currentTick % spawnrate)==0){
+						//If spawn rate is higher than 20, decrese it by 2.
+						if(spawnrate>20) spawnrate=spawnrate-2;
+						//Spawn a monster somewhere
+						this.spawnMonster();
+					}
+
+					//Get tankss current x and y.
+					nx = this.mytank.x;
+					ny = this.mytank.y;
+					ang = this.mytank.angle;
+
+					//Update it depending on which keys are pressed.
+					if(this.inputs.keyboard.left){
+						ang = (-2*(Math.PI/180))+ang;
+					}
+					if(this.inputs.keyboard.right){
+						ang = (2*(Math.PI/180))+ang;
+					}
+					if(this.inputs.keyboard.up){
+						if(speed<5) speed = speed+0.2;
+					}else{
+						//Apply friction
+						if(speed>0) speed = speed-0.1;
+						if(speed<0) speed = speed+0.1;
+					}
+
+					if(this.inputs.keyboard.down){
+						if(speed>0) speed -= 0.5;
+						if(speed<0) speed = 0;
+					}
+					nx += (speed * Math.sin(ang));
+					ny += (speed * Math.cos(ang))*-1;
+						
+					//Ensure new X position is inside playable area	
+					if(nx < 0 || (nx + this.mytank.w) > this.layer.w){
+						speed = -(speed*0.4);
+						nx = this.mytank.x;
+					}
+					//Ensure new Y position is inside playable area	
+					if(ny < 0 || (ny + this.mytank.h) > this.layer.h){
+						speed = -(speed*0.4);
+						ny = this.mytank.y;
+					}
+					//Pickup click method & fire!
+					if(this.inputs.mouse.click) this.fireMissile();	
+						
+					//Tell the tank
+					this.mytank.position(nx,ny);
+					this.mytank.setAngle(ang);
+					//this.mytank.offset(0,0);
+					if(speed > 0.05) this.mytank.animation.next().update();
+
+					//Apply the changes to tank
+					this.mytank.update();
+
+					//Get center point for the tank
+					tank_cent_y = this.mytank.y+(this.mytank.h/2);
+					tank_cent_x = this.mytank.x+(this.mytank.w/2);
+					//Work out angle cursor is from tank.
+					cursorAngle = Math.atan2(
+						(this.inputs.mouse.position.y
+						-tank_cent_y),
+						(this.inputs.mouse.position.x
+						-tank_cent_x)
+					 )+1.571;//Add roughly 90 degrees.
+
+					//Apply same movements to turret
+					this.myturret.position(nx,ny);
+					this.myturret.setAngle(cursorAngle);
+					this.myturret.update();
+
+					this.updateMissiles();
+					this.updateMonsters();
+					//if(missile != null) missile.update();
+				
+				}
+			}	
+			//Bootstap Game
+			var bootstrap = function(){
+				//Create new Sprite.js Scene (effectively the Canvas that sprite js draws on to)
+				var scene = sjs.Scene({'useWebGL':false ,'w':window.innerWidth, 'h':window.innerHeight});
+				var layer = scene.Layer("game_layer");
+				//Load images needed to display
+				scene.loadImages([
+					'tank.png',
+					'slug.png',
+					'missile.png',
+					 ], 
+				 function() {
+						//Create instance of Engine (class i'm using to run the game)
+						engine = new Engine(scene, layer);
+						//Setup game loop via Sprite.js's ticker (calls engine's run method)
+						ticker = scene.Ticker(function() { engine.run(); });
+						//Pass ticker to engine
+						engine.setTicker(ticker);
+						//Start the ticker
+						ticker.run();
+					});
+			}
+			//Bootstap Game (when page is loaded)
+			window.addEventListener("load", bootstrap, false);
+		</script>
+
+	</head> 
+	<body> 
+		<div id='game_map'>
+		
+		
+		</div>
+	</body> 
+</html> 

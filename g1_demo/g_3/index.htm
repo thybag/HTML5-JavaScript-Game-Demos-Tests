@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head> 
+		<title>Test Game 3</title> 
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+		<style type="text/css"> 
+			  body {margin:0;padding:0; background-color: #111;}
+			  div {margin:0 auto;max-width:1280px;}
+		</style> 
+		<script type="text/javascript" src='../vendor/sprite.js'></script> 
+		<script type="text/javascript">
+		
+		var ship;
+			//Create Engine Class
+			function Engine(scene, layer){
+				//store scene and layer for later
+				this.scene = scene;
+				this.layer = layer;
+				this.inputs = scene.Input();
+				
+				//Create our sprite
+				ship = this.myship = this.scene.Sprite("ship.png",{
+					"layer": this.layer, //Layer ship will be displayed in.
+					"x": 100, 	//X position of sprite
+					"y": 100, 	//Y position of sprite
+					"w": 37, 	//width of sprite.
+					"h": 75 	//height of sprite.
+				});
+				
+				//Add set ticker method to Engine
+				this.setTicker = function(ticker){
+					this.ticker = ticker;
+				}
+				
+				var speed =0;
+				//Create run method which will be called each time the 
+				//game loop runs.
+				this.run = function(){
+				
+					//Get ships current x and y.
+					nx = this.myship.x;
+					ny = this.myship.y;
+					ang = this.myship.angle;
+
+					//Update it depending on which keys are pressed.
+					if(this.inputs.keyboard.left){
+						ang = (-2*(Math.PI/180))+ang;
+					}
+					if(this.inputs.keyboard.right){
+						ang = (2*(Math.PI/180))+ang;
+					}
+					if(this.inputs.keyboard.up){
+						if(speed<5) speed = speed+0.5;
+					}
+					if(this.inputs.keyboard.down){
+						if(speed>0) speed -= 0.5;
+					}
+					nx += (speed * Math.sin(ang));
+					ny += (speed * Math.cos(ang))*-1;
+						
+						
+					//Tell the ship
+					this.myship.position(nx,ny);
+					this.myship.setAngle(ang);
+					this.myship.offset(0,0);
+					//Apply the changes
+					this.myship.update();
+				
+				}
+			}	
+			//Bootstap Game
+			var bootstrap = function(){
+				//Create new Sprite.js Scene (effectively the Canvas that sprite js draws on to)
+				var scene = sjs.Scene({'w':window.innerWidth, 'h':window.innerHeight});
+				var layer = scene.Layer("game_layer");
+				//Load images needed to display
+				scene.loadImages([
+					'ship.png',
+					'background.png'
+					 ], 
+				 function() {
+						//Create instance of Engine (class i'm using to run the game)
+						engine = new Engine(scene, layer);
+						//Setup game loop via Sprite.js's ticker (calls engine's run method)
+						ticker = scene.Ticker(function() { engine.run(); });
+						//Pass ticker to engine
+						engine.setTicker(ticker);
+						//Start the ticker
+						ticker.run();
+					});
+			}
+			//Bootstap Game (when page is loaded)
+			window.addEventListener("load", bootstrap, false);
+		</script>
+
+	</head> 
+	<body> 
+		<div id='game_map'>
+		
+		
+		</div>
+	</body> 
+</html> 
