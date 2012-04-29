@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head> 
+		<title>Convoy Command</title> 
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+		<style type="text/css"> 
+			body {margin:0;padding:0; background-color:#D9D9F3;}
+			/*div {margin:0 auto;}*/
+			#world {background: url(bkg2.png) repeat-x; }
+			#titleBar {background-color:#000; color:#fff; padding:5px; font-weight:bold; font-family:arial}
+
+
+			#controls{ position: absolute; 
+				top:480px; left:0;
+				background-color:grey;
+				display:block;
+				width:100%; 
+				height:80px;
+
+			}
+
+			.main {float:left;}
+
+			.buy {float:left; border:solid 2px; width:102px;height:68px;background-color:#eee;margin:2px;padding:2px; cursor:pointer;}
+			#controls .main div {float:left;}
+			.info {width:280px;}
+
+			#incoming {float:right; background-color:#000;color:green;padding:4px 8px;margin:6px 10px;}
+
+		</style> 
+		<script type="text/javascript" src='vendor/sprite.js'></script> 
+		<script type="text/javascript" src='vendor/lib/collision.js'></script> 
+		<script type="text/javascript" src='lib/bootstrap.js'></script> 
+		<script type="text/javascript" src='lib/main.js'></script> 
+		<script type="text/javascript" src='lib/Controls.js'></script>
+
+		<script type="text/javascript" src='lib/Missile.js'></script> 
+		
+		<script type="text/javascript" src='lib/badguys/badguy.js'></script> 
+		<script type="text/javascript" src='lib/badguys/flyer.js'></script> 
+
+		<script type="text/javascript" src='lib/carriages/carriage.js'></script> 
+		<script type="text/javascript" src='lib/carriages/tanker.js'></script> 
+		<script type="text/javascript" src='lib/carriages/turret.js'></script> 
+		<script type="text/javascript" src='lib/carriages/cannon.js'></script> 
+		<script type="text/javascript" src='lib/carriages/Residence.js'></script> 
+		<script type="text/javascript" src='lib/convoy.js'></script> 
+		
+		
+
+	</head> 
+	<body> 
+		<div id='titleBar'>Convoy Command</div>
+		<div id='world'></div>
+		<div id='controls'>
+
+			<div id='incoming'>
+				Enemies incoming <br/> T-<span id='incom_tim'>200</span> seconds<br/>
+
+				Send next wave?
+			</div>
+
+			<div class='main'>
+				<div class='info'>
+					Cash: <span id='cash'>$1000</span> 
+					 <br/>
+					Population: <span id='pop'>30</span> <br/>
+					Waves survived: <span id='lvl'>1</span><br/>
+					Traveled: <span id='trav'>800</span> meters
+				</div>
+
+				<div>
+					<div class='buy' onclick="controls.buy('Turret');">
+						Buy Turret<br/>
+
+						$300
+					</div>
+					<div class='buy' onclick="controls.buy('Cannon');">
+						Buy Cannon<br/>
+
+						$250
+					</div>
+					<div class='buy' onclick="controls.buy('Residence');">
+						Buy Residence<br/>
+
+						$600
+					</div>
+				</div>
+			</div>
+		
+		
+		</div>
+	</body> 
+</html> 
