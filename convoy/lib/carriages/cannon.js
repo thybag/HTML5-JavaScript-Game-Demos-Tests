@@ -2,21 +2,22 @@ function Cannon (scene,layer){//inherits carrage
 	this.scene = scene;
 	this.layer = layer;
 
-	this.hp = 100;
-
-	this.img = 'cannon.png?';
+	//visual
 	this.w = 30;
 	this.h = 60;
+	this.sprites = [];
+	//functional
+	this.name = 'Pulse Cannon';
+	this.hp = 100;
+	this.maxhp = this.hp;
 	this.cost = 250;
 	this.fireRate = 100;
 	this.f_angle = 0;
-
+	//Weapons
 	this.missile_1 = {"img":"assets/c1.png","w":4,"h":4,"x":100,"y":100, "dmg":22, speed:2, noTarget:true};
 
 	this.create = function(x,y){
 		this.x = x;
-		this.y = y;
- 		this.x = x;
 		this.y = y;
 
 		this.aimer = this.addSprite({

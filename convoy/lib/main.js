@@ -37,13 +37,32 @@ function Engine(scene, layer){
 		//
 		this.missiles.forEach(function(bg){bg.update();});
 
+		
 		if(this.inputs.mouse.click) {
-			if(inWorld(this.inputs.mouse.position.x,this.inputs.mouse.position.y-30)){
-				var s = this.convoy.getSelected(this.inputs.mouse.position.x,this.inputs.mouse.position.y-30);
-				console.log(s);
+			if(inWorld(this.inputs.mouse.position.x,this.inputs.mouse.position.y-20)){
+				var sprite = this.convoy.getSelected(this.inputs.mouse.position.x,this.inputs.mouse.position.y-20);
+				
+				var node = document.getElementById('carriage_option');
+				if(sprite==null){
+					node.style.display = 'none';
+				}else{
+					node.style.display = 'block';
+					node.style.top = '420px';
+					node.style.left = sprite.x+'px';
+
+
+
+					node.innerHTML = '<strong>'+sprite.name+'</strong><br>';
+					node.innerHTML += 'HP: '+sprite.hp+'/'+sprite.maxhp;
+					node.innerHTML += '- <span title="500">upgrade</span> - fix';
+					
+				}
+
+
+				
 			}
 		}
-		
+	
 	
 	}
 
@@ -67,7 +86,7 @@ function Engine(scene, layer){
 	this.createSwarm = function(tick){
 
 
-		var next_wave_in = 20;
+		var next_wave_in = 10;
 
 		sec_tick = Math.round(tick/24) % next_wave_in;
 		lvl = Math.round(tick/24)/next_wave_in;

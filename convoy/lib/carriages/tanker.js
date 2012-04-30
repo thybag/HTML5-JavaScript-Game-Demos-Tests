@@ -1,9 +1,16 @@
 function Tanker (scene,layer){//inherits carrage
-	this.hp = 500;
-
+	
+	//Globals
+	this.scene = scene;
+	this.layer = layer;
+	//Visual
 	this.img = 'tanker.png?_';
 	this.w = 144;
 	this.h = 74;
+	//functional data
+	this.name = 'Tanker';
+	this.hp = 500;
+	this.maxhp = this.hp;
 
 	this.create = function(x,y){
 		this.x = x;

@@ -15,6 +15,7 @@ function BadGuy(scene,layer){
 	//functional data
 	this.hp = 50;
 	this.win = 50;
+	this.fireRate = 150;
 	//Componets
 	this.sprite = null;
 
@@ -29,6 +30,20 @@ function BadGuy(scene,layer){
 		}
 
 	}
+
+	this.fire = function(target, missileType){
+		if((engine.ticker.currentTick % this.fireRate) == 0) engine.addMissile(target,missileType);
+	}
+
+	this.findTarget = function(spr){
+		if(engine.convoy.carrages.length > 0){
+			return engine.convoy.carrages[Math.floor(Math.random()*engine.convoy.carrages.length)];
+		}else{
+			return null;
+		}
+	}
+
+
 	this.create = function(x,y){
 		this.x = x;
 		this.y = y;

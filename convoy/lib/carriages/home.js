@@ -1,6 +1,6 @@
 function Residence (scene,layer){//inherits carrage
 	this.hp = 100;
-
+	this.sprites = [];
 	this.img = 'accom.png?';
 	this.w = 160;
 	this.h = 75;

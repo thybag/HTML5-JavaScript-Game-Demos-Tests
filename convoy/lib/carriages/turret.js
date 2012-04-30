@@ -1,20 +1,25 @@
 function Turret (scene,layer){//inherits carrage
 
+	//Globals
 	this.scene = scene;
 	this.layer = layer;
-	this.fireRate = 10;
-
-	this.hp = 100;
-	this.cost = 300;
-	
+	//visual
 	this.img = 'turret.png?';
 	this.w = 30;
 	this.h = 60;
 
+	//functional
+	this.name = 'Missile Turret';
+	this.fireRate = 10;
+	this.hp = 100;
+	this.maxhp = this.hp;
+	this.cost = 300;
 	this.doFire = 0;
 	this.f_angle = 0;
+	this.sprites = [];
 
-		this.missile_1 = {"img":"assets/m1.png?","w":2,"h":4,"x":100,"y":100, "dmg":4};
+	//Missile types
+	this.missile_1 = {"img":"assets/m1.png?","w":2,"h":4,"x":100,"y":100, "dmg":4};
 
 	this.create = function(x,y){
 		this.x = x;

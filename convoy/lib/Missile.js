@@ -5,11 +5,11 @@ function Missile(target, sprite){
 	this.noTarget = false;
 	this.a = null //
 
+	this.targetArray = (target instanceof BadGuy) ? engine.badguys : engine.convoy.carrages;
+
 	this.update = function(){
 
 		if(target.hp<0) this.noTarget = true;
-
-
 
 		var m = this.sprite;
 		if(!this.noTarget || this.a==null) this.a = this.getAngle(m, target);
@@ -20,8 +20,9 @@ function Missile(target, sprite){
 		m.position(x,y);
 
 		if(m!==null)m.update();
-		if(m==null){console.log("self kill?");}
-		col = m.collidesWithArray(engine.badguys);
+
+
+		col = m.collidesWithArray(this.targetArray);
 		if(col !== false){ //false means there were no collisions
 			col.hit(this.dmg);
 			//remove missile

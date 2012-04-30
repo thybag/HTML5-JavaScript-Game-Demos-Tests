@@ -3,7 +3,9 @@ function Carriage(scene,layer){
 	//Globals?
 	this.scene = scene;
 	this.layer = layer;
-
+	
+	//Componets
+	this.sprites = [];
 	//Visual data
 	this.x = 0;
 	this.y = 0;
@@ -13,13 +15,13 @@ function Carriage(scene,layer){
 	this.img ='';
 	this.type = "rectangle";
 
-	this.fireRate = 100;
 	//functional data
+	this.name = 'Carriage';
+	this.fireRate = 100;
 	this.hp = 100;
 	this.upgradeLevel = 1;
 	this.cost = 200;
-	//Componets
-	this.sprites = [];
+	
 
 
 	this.create = function(){
@@ -31,6 +33,19 @@ function Carriage(scene,layer){
 		if((engine.ticker.currentTick % this.fireRate) == 0) engine.addMissile(target,missileType);
 
 
+	}
+
+	this.hit = function(dmg){
+		this.hp -= dmg;
+		if(this.hp < 0){
+			//remove missile from our array
+			this.destroy();
+			engine.convoy.remove(this);
+			//engine.badguys.splice(engine.badguys.indexOf(this),1);
+			//controls.fund(this.win);
+			console.log("BOOM!");
+		}
+		
 	}
 	this.addSprite = function(sp){
 		var  spr = this.scene.Sprite(sp.img,{
@@ -59,12 +74,17 @@ function Carriage(scene,layer){
 			return null;
 		}
 	}
+
 	this.position = function(x,y){
-		/*	this.sprites.forEach(function(spr){
-			spr.position(x,y);
-			console.log(spr);
-			});
-		*/
+		var x_diff = this.x - x;
+		var y_diff = this.y - y;
+
+		this.sprites.forEach(function(spr){
+			spr.position(spr.x-x_diff,spr.y-y_diff);
+		});
+
+		this.x = x;
+		this.y = y;
 	}
 	this.scale = function(sca){
 		/*this.sprites.forEach(function(spr){

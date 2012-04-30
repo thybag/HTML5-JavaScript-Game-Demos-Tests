@@ -9,12 +9,14 @@ function Convoy(scene,layer){ // collection of carrages
 	this.add = function(unit){
 		unit.create(this.pos.x+this.px_len,this.pos.y)	
 		this.px_len += unit.w;
+		//unit.dom.addEventListener('click', function(e) { console.log(this); });
+		//unit.dom.addEventListener('mouseover',function(e) { console.log(this); });
 		this.carrages.push(unit);
 	}
 	
 	this.remove = function(unit){
-	
-	
+		this.carrages.splice(this.carrages.indexOf(unit),1);
+		this.reshuffle();
 	}
 	
 	this.update = function(){
@@ -44,5 +46,15 @@ function Convoy(scene,layer){ // collection of carrages
 		return carriage;
 	}
 	
+	this.reshuffle = function(){
+		var nx = this.pos.x;
+		this.carrages.forEach(function(car){
+			console.log(car.x);
+			car.position(nx, car.y);
+			nx += car.w;
+		});
+		this.px_len = nx-this.pos.x;
+		console.log("set new pxlen");
+	}
 
 }
