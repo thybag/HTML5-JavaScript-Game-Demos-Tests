@@ -33,8 +33,18 @@
 				background-color:#fff;
 				z-index:20;
 				padding:4px;
-
+				width:240px;
 			}
+			#carriage_option .opt {
+				height:40px;width:54px;float:right; margin:0 2px;padding:2px;
+				border:solid 1px;cursor:pointer;
+				text-align:center;
+			}
+			#carriage_option .opt:hover {
+
+				background-color:#eee;
+			}
+
 		</style> 
 		<script type="text/javascript" src='vendor/sprite.js'></script> 
 		<script type="text/javascript" src='vendor/lib/collision.js'></script> 
@@ -61,9 +71,7 @@
 		<div id='titleBar'>Convoy Command</div>
 		<div id='world'></div>
 
-		<div id='carriage_option' style=''>
-			HP: 20/50 - upgrade to lvl2 - Repair
-		</div>
+		<div id='carriage_option'></div>
 
 		<div id='controls'>
 

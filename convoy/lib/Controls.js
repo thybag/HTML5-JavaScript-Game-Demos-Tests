@@ -15,6 +15,34 @@ function Controls(eng){
 		}
 	}
 
+	this.repair = function(sp){
+		var hp_to_rep = sp.maxhp-sp.hp;
+		var cost = hp_to_rep*2;
+
+		if(this.cash >= cost){
+			this.charge(cost);
+			sp.hp = sp.maxhp;
+		}else{
+			console.log("cant afford");
+		}
+
+	}
+
+
+	this.upgrade = function(sp){
+		var cur_lvl = sp.level;
+		var cost = sp.level[cur_lvl+1].cost;
+
+		if(this.cash >= cost){
+			this.charge(cost);
+			sp.upgrade();
+		}else{
+			console.log("cant afford");
+		}
+
+	}
+
+
 	this.charge = function(cost){
 		this.cash -= cost;
 		this.updateOptions();

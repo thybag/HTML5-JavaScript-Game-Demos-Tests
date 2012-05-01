@@ -15,7 +15,7 @@ function Flyer (scene,layer){//inherits carrage
 
 	this.mode = 1;
 
-	this.miss = {"img":"assets/c1.png","w":4,"h":4,"x":100,"y":100, "dmg":5, speed:2, noTarget:true};
+	this.miss = {"img":"assets/c1.png","w":4,"h":4,"x":100,"y":100, "dmg":5, speed:2, noTarget:true, range:200};
 	//1 = left
 	//2= right
 	//0 = stop

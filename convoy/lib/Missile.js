@@ -4,7 +4,9 @@ function Missile(target, sprite){
 	this.sprite = sprite;
 	this.noTarget = false;
 	this.a = null //
+	this.range = 100;
 
+	this.dead = false;
 	this.targetArray = (target instanceof BadGuy) ? engine.badguys : engine.convoy.carrages;
 
 	this.update = function(){
@@ -16,11 +18,11 @@ function Missile(target, sprite){
 
 		var x = m.x+ (4 * Math.sin(this.a));
 		var y = m.y+ (4 * Math.cos(this.a))*-1
+
+		this.range -= 4;
+
 		//Update sprite
 		m.position(x,y);
-
-		if(m!==null)m.update();
-
 
 		col = m.collidesWithArray(this.targetArray);
 		if(col !== false){ //false means there were no collisions
@@ -28,6 +30,8 @@ function Missile(target, sprite){
 			//remove missile
 			this.explode();
 		}
+
+		if(this.range < 0) this.explode();
 
 		if(m.layer != null){ 
 			if(!(
@@ -40,14 +44,23 @@ function Missile(target, sprite){
 			}
 
 		}
-			
+
+
+		if(m!==null) m.update();	
 		
 	}
 
 	this.explode = function(){
-		this.sprite.remove();
-		//remove missile from our array
-		engine.missiles.splice(engine.missiles.indexOf(this),1);
+
+		if(this.sprite.layer){
+			this.sprite.remove();
+			//remove missile from our array
+			engine.missiles.splice(engine.missiles.indexOf(this),1);
+		}else{
+			console.log("bad remove");
+			//engine.dead.push(this);
+		}
+		
 	}
 
 	this.getAngle = function(spr, target){

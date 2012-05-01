@@ -19,7 +19,7 @@ function Turret (scene,layer){//inherits carrage
 	this.sprites = [];
 
 	//Missile types
-	this.missile_1 = {"img":"assets/m1.png?","w":2,"h":4,"x":100,"y":100, "dmg":4};
+	this.missile_1 = {"img":"assets/m1.png?","w":2,"h":4,"x":100,"y":100, "dmg":4, "range":300};
 
 	this.create = function(x,y){
 		this.x = x;
@@ -51,9 +51,8 @@ function Turret (scene,layer){//inherits carrage
 	}
 	this.run = function(){
 
-		if(this.target == null || this.target.hp <0){
-			this.target = this.findTarget();
-		} 
+		this.findTarget(this.missile_1.range);
+		
 
 		if(this.target != null){
 			this.f_angle= this.getAimAngle(this.aimer, this.target)

@@ -21,6 +21,7 @@ function Carriage(scene,layer){
 	this.hp = 100;
 	this.upgradeLevel = 1;
 	this.cost = 200;
+	this.ref_time = 0;
 	
 
 
@@ -29,15 +30,12 @@ function Carriage(scene,layer){
 
 	}
 	this.fire = function(target,missileType){
-
-		if((engine.ticker.currentTick % this.fireRate) == 0) engine.addMissile(target,missileType);
-
-
+		if(((this.ref_time+engine.ticker.currentTick) % this.fireRate) == 0) engine.addMissile(target,missileType);
 	}
 
 	this.hit = function(dmg){
 		this.hp -= dmg;
-		if(this.hp < 0){
+		if(this.hp <= 0){
 			//remove missile from our array
 			this.destroy();
 			engine.convoy.remove(this);
@@ -67,12 +65,18 @@ function Carriage(scene,layer){
 				-spr.x)
 			 );//+1.571
 	}
-	this.findTarget = function(spr){
-		if(engine.badguys.length > 0){
-			return engine.badguys[Math.floor(Math.random()*engine.badguys.length)];
-		}else{
-			return null;
+	this.findTarget = function(range){
+		//If current target is 0
+		if(this.target == null || this.target.hp <0 || getDistance(this, this.target) > range){
+			//console.log("select new");
+			if(engine.badguys.length > 0){
+				this.target = engine.badguys[Math.floor(Math.random()*engine.badguys.length)];
+				if(getDistance(this, this.target) > range) this.target = null;
+			}else{
+				this.target = null;
+			}
 		}
+		
 	}
 
 	this.position = function(x,y){

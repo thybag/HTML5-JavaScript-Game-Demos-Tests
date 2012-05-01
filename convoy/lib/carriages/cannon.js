@@ -1,6 +1,8 @@
 function Cannon (scene,layer){//inherits carrage
+	
 	this.scene = scene;
 	this.layer = layer;
+	this.ref_time = engine.ticker.currentTick;
 
 	//visual
 	this.w = 30;
@@ -13,8 +15,21 @@ function Cannon (scene,layer){//inherits carrage
 	this.cost = 250;
 	this.fireRate = 100;
 	this.f_angle = 0;
+
+	this.level = [];
+	this.level[2] = {
+		cost:250,
+		name:"Medium Pulse Cannon",
+	 	fireRate:80, 
+	 	maxhp: 200,
+	 	missile: this.missile_2
+	};
+	this.level[3] = {cost:500,fireRate:50, name: "Heavy Pulse Cannon"};
+
 	//Weapons
-	this.missile_1 = {"img":"assets/c1.png","w":4,"h":4,"x":100,"y":100, "dmg":22, speed:2, noTarget:true};
+	this.missile_1 = {"img":"assets/c1.png","w":4,"h":4,"x":100,"y":100, "dmg":22, speed:2, noTarget:true, "range":400};
+
+
 
 	this.create = function(x,y){
 		this.x = x;
@@ -46,14 +61,15 @@ function Cannon (scene,layer){//inherits carrage
 
 	this.run = function(){
 
-		if(this.target == null || this.target.hp <0){
-			this.target = this.findTarget();
-		} 
+		var range = this.missile_1.range;
+		var missile = this.missile_1;
+
+		this.findTarget(range);
 
 		if(this.target != null){
 			this.f_angle = this.getAimAngle(this.aimer, this.target)
 			this.aimer.setAngle(this.f_angle);
-			var m_attr = SimpleClone(this.missile_1);
+			var m_attr = SimpleClone(missile);
 			m_attr.x = this.aimer.x;
 			m_attr.y = this.aimer.y;
 

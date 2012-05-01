@@ -6,8 +6,11 @@ function Engine(scene, layer){
 	//Var to keep track of missiles.
 	this.missiles = [];
 	this.badguys = [];
+	this.dead = [];
 	this.convoy = new Convoy(scene,layer);
 	this.level = 0;
+
+	this.dlg = new Dialog();
 
 	//Add set ticker method to Engine
 	this.setTicker = function(ticker){
@@ -36,27 +39,13 @@ function Engine(scene, layer){
 		this.convoy.update();
 		//
 		this.missiles.forEach(function(bg){bg.update();});
-
+		this.dlg.update();
 		
 		if(this.inputs.mouse.click) {
 			if(inWorld(this.inputs.mouse.position.x,this.inputs.mouse.position.y-20)){
 				var sprite = this.convoy.getSelected(this.inputs.mouse.position.x,this.inputs.mouse.position.y-20);
 				
-				var node = document.getElementById('carriage_option');
-				if(sprite==null){
-					node.style.display = 'none';
-				}else{
-					node.style.display = 'block';
-					node.style.top = '420px';
-					node.style.left = sprite.x+'px';
-
-
-
-					node.innerHTML = '<strong>'+sprite.name+'</strong><br>';
-					node.innerHTML += 'HP: '+sprite.hp+'/'+sprite.maxhp;
-					node.innerHTML += '- <span title="500">upgrade</span> - fix';
-					
-				}
+				this.dlg.invoke(sprite);
 
 
 				
@@ -78,6 +67,7 @@ function Engine(scene, layer){
 					}));
 		mis.dmg = m.dmg;
 		mis.noTarget = m.speed;
+		if(typeof m.range != 'undefined')mis.range  = m.range;
 		if(typeof m.speed != 'undefined') mis.speed = m.speed;
 
 		this.missiles.push(mis);	
@@ -125,6 +115,90 @@ function Engine(scene, layer){
 	
 }
 
+function Dialog(){
+	this.visable = false;
+	this.sprite = null;
+	var _this = this;
+	//Build dilaog
+	this.node = document.getElementById('carriage_option');
+	this.nodes = [];
+	this.nodes.name = document.createElement('strong');
+
+	this.nodes.health = document.createElement('div')
+	this.nodes.hp = document.createElement('span');
+	this.nodes.maxHp = document.createElement('span');
+
+	this.nodes.rep = document.createElement('div');
+	this.nodes.rep.className = 'opt';
+	this.nodes.rep.innerHTML = 'Repair';
+	this.nodes.upg = document.createElement('div');
+	this.nodes.upg.className = 'opt';
+	this.nodes.upg.innerHTML = 'Upgrade';
+
+
+	this.node.appendChild(this.nodes.rep);
+	this.node.appendChild(this.nodes.upg);
+
+	this.node.appendChild(this.nodes.name);
+	this.node.appendChild(document.createElement('br'));
+	this.node.appendChild(this.nodes.health);
+	
+
+	this.nodes.health.innerHTML = 'HP: ';
+	this.nodes.health.appendChild(this.nodes.hp);
+	this.nodes.health.appendChild(document.createTextNode('/'));
+	this.nodes.health.appendChild(this.nodes.maxHp);
+
+	this.invoke = function(sprite){
+		if(sprite==null){
+			this.hide();
+		}else{
+			this.sprite = sprite;
+			this.show(sprite.x);
+
+			this.set('name',	sprite.name);
+			this.set('hp', sprite.hp);//sprite.hp
+			this.set('maxHp',	sprite.maxhp);
+
+			//node.innerHTML = '<div class="opt">upgrade</div><div class="opt">Repair</div>';
+			//node.innerHTML += '<strong>'+sprite.name+'</strong><br>';
+			//node.innerHTML += 'HP: '+sprite.hp+'/'+sprite.maxhp;
+		}
+
+	}
+	this.show = function(x){
+		this.visable = true;
+
+		this.node.style.display = 'block';
+		this.node.style.top = '420px';
+		this.node.style.left = x+'px';
+	}
+	this.hide = function(){
+		this.node.style.display = 'none';
+		this.visable = false;
+	}
+
+	this.set = function(node,val){
+		console.log(this.nodes[node]);
+		this.nodes[node].innerHTML = val;
+
+	}
+	this.update = function(){
+		if(this.sprite != null){
+			this.nodes.hp.innerHTML = this.sprite.hp;
+			if(this.sprite.hp<1)this.hide();
+		}
+
+	}
+	this.nodes.rep.onclick = function(){
+		controls.repair(_this.sprite);
+		//_this.show(_this.sprite.x);
+	}
+	this.nodes.upg.onclick = function(){
+		controls.upgrade(_this.sprite);
+	}
+}
+
 function SimpleClone(obj){
 		object = {};
 		//For every option in object, create it in the duplicate.
@@ -132,6 +206,19 @@ function SimpleClone(obj){
 			object[i] = obj[i];
 		}
 		return object;
+}
+function getDistance( point1, point2 )
+{
+  var xs = 0;
+  var ys = 0;
+ 
+  xs = point2.x - point1.x;
+  xs = xs * xs;
+ 
+  ys = point2.y - point1.y;
+  ys = ys * ys;
+ 
+  return Math.sqrt( xs + ys );
 }
 function inWorld(x,y){
 
