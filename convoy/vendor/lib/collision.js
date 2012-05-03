@@ -89,6 +89,7 @@ function makeBoundingBox(a) {
         type: a.shape.type || a.type,
         w:a.shape.w,
         h:a.shape.h,
+        angle:a.angle
     };
 }
 
@@ -295,8 +296,7 @@ function resolveCollisions() {
 global.sjs.collision = {
     find:resolveCollisions,
     isPointInImage:isPointInImage,
-    isPointInRectangle:isPointInRectangle,
-    isRectangleInRectangle:rectangleCollides
+    isPointInRectangle:isPointInRectangle
 };
 
 })(this);

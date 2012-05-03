@@ -90,10 +90,17 @@ function has(el, propList) {
 }
 
 function initBrowserSpecific() {
-    sjs.tproperty = has(doc.body.style, ['transform',
-        'WebkitTransform', 'MozTransform', 'OTransform', 'msTransform']);
-    sjs.animationFrame = has(global, ['mozRequestAnimationFrame',
-        'webkitRequestAnimationFrame', 'oRequestAnimationFrame',
+    sjs.tproperty = has(doc.body.style, [
+        'transform',
+        'webkitTransform',
+        'MozTransform',
+        'OTransform',
+        'msTransform']);
+    sjs.animationFrame = has(global, [
+        'requestAnimationFrame',
+        'mozRequestAnimationFrame',
+        'webkitRequestAnimationFrame',
+        'oRequestAnimationFrame',
         'msRequestAnimationFrame']);
     sjs.createEventProperty = has(doc, ['createEvent', 'createEventObject']);
     browser_specific_runned = true;
@@ -559,6 +566,18 @@ Sprite.prototype.size = function (w, h) {
     return this;
 };
 
+Sprite.prototype.toFront = function(){
+	if(this.dom && this.layer){
+		this.layer.dom.appendChild(this.dom);
+	}
+};
+
+Sprite.prototype.toBack = function(){
+	if(this.dom && this.layer){
+		this.layer.dom.insertBefore(this.dom, this.layer.dom.firstChild);
+	}
+};
+
 // Physic
 
 Sprite.prototype.setForce = function setForce(xf, yf) {
@@ -687,9 +706,11 @@ Sprite.prototype.webGLUpdate = function webGLUpdate () {
 };
 
 Sprite.prototype.update = function updateDomProperties () {
+
+    if(this.layer.scene.disableUpdate)
+        return this;
+
     // This is the CPU heavy function.
-	if(this.layer == null) return;
-	
     if (this.layer.useWebGL) {
         return this.webGLUpdate();
     }
@@ -759,8 +780,21 @@ Sprite.prototype.canvasUpdate = function canvasUpdate(layer) {
         ctx = layer.ctx;
     else
         ctx = this.layer.ctx;
-    ctx.save();
 
+    var fast_track = (
+        this.angle == 0
+        && this.opacity == 1
+        && this.imgNaturalWidth == this.w
+        && this.imgNaturalHeight == this.h
+        && this.xTransformOrigin === null
+    )
+    if(fast_track) {
+        ctx.drawImage(this.img, this.xoffset, this.yoffset, this.w, this.h,
+            this._x_rounded, this._y_rounded, this.w, this.h);
+        return this;
+    }
+
+    ctx.save();
     if (this.xTransformOrigin === null) {
         // 50% 505 in CSS
         transx = this.w / 2 | 0;
@@ -771,7 +805,7 @@ Sprite.prototype.canvasUpdate = function canvasUpdate(layer) {
     }
 
     // rounding the coordinates yield a big performance improvement
-    ctx.translate(this.x + transx, this.y + transy);
+    ctx.translate(this._x_rounded + transx, this._y_rounded + transy);
     ctx.rotate(this.angle);
     if (this.xscale !== 1 || this.yscale !== 1)
         ctx.scale(this.xscale, this.yscale);
@@ -883,6 +917,7 @@ Sprite.prototype.center = function center() {
 Sprite.prototype.explode2 = function explode(v, horizontal, layer) {
     if (!layer)
         layer = this.layer;
+    var props = {layer:layer, color:this.color};
     if (v === undefined) {
         if (horizontal)
             v = this.h / 2;
@@ -890,8 +925,8 @@ Sprite.prototype.explode2 = function explode(v, horizontal, layer) {
             v = this.w / 2;
     }
     v = v | 0;
-    var s1 = layer.scene.Sprite(this.src, layer);
-    var s2 = layer.scene.Sprite(this.src, layer);
+    var s1 = layer.scene.Sprite(this.src, props);
+    var s2 = layer.scene.Sprite(this.src, props);
     if (horizontal) {
         s1.size(this.w, v);
         s1.position(this.x, this.y);
@@ -917,11 +952,12 @@ Sprite.prototype.explode4 = function explode(x, y, layer) {
     y = y | 0;
     if (!layer)
         layer = this.layer;
+    var props = {layer:layer, color:this.color};
     // top left sprite, going counterclockwise
-    var s1 = layer.scene.Sprite(this.src, layer),
-        s2 = layer.scene.Sprite(this.src, layer),
-        s3 = layer.scene.Sprite(this.src, layer),
-        s4 = layer.scene.Sprite(this.src, layer);
+    var s1 = layer.scene.Sprite(this.src, props),
+        s2 = layer.scene.Sprite(this.src, props),
+        s3 = layer.scene.Sprite(this.src, props),
+        s4 = layer.scene.Sprite(this.src, props);
 
         s1.size(x, y);
     s1.position(this.x, this.y);
@@ -1078,6 +1114,7 @@ Ticker_ = function Ticker_(scene, paint, options) {
         return new Ticker_(tickDuration, paint);
 
     this.tickDuration = optionValue(options, 'tickDuration', 16);
+    this.expectedFps = 1000 / this.tickDuration;
     this.useAnimationFrame = optionValue(options, 'useAnimationFrame', false);
     if (!sjs.animationFrame)
         this.useAnimationFrame = false;
@@ -1090,6 +1127,8 @@ Ticker_ = function Ticker_(scene, paint, options) {
     this.currentTick = 0;
     this.ticksSinceLastStart = 0;
     this.droppedFrames = 0;
+    // will divide the framerate by 2 if true
+    this.lowFrameRate = false;
 };
 
 Ticker_.prototype.next = function () {
@@ -1106,8 +1145,24 @@ Ticker_.prototype.next = function () {
 };
 
 Ticker_.prototype.run = function () {
-    if (this.paused)
+    if (this.paused) {
         return;
+    }
+    if(this.lowFrameRate || this.load > 20 && this.fps < (this.expectedFps / 2)) {
+        this.lowFrameRate = true;
+        if(this.skippedFrames == 1) {
+            this.skippedFrames = 0;
+            this.skipPaint = true;
+            this.scene.disableUpdate = true;
+        } else {
+            this.skippedFrames = 1;
+            this.skipPaint = false;
+            this.scene.disableUpdate = false;
+        }
+    } else {
+        this.skipPaint = false;
+    }
+
     var t = this;
     var ticksElapsed = this.next();
     // no update needed, this happen on the first run
@@ -1117,10 +1172,12 @@ Ticker_.prototype.run = function () {
         return;
     }
 
-    for (var name in this.scene.layers) {
-        var layer = this.scene.layers[name];
-        if (layer.useCanvas && layer.autoClear) {
-            layer.clear();
+    if(!this.skipPaint) {
+        for (var name in this.scene.layers) {
+            var layer = this.scene.layers[name];
+            if (layer.useCanvas && layer.autoClear) {
+                layer.clear();
+            }
         }
     }
 
@@ -1132,8 +1189,8 @@ Ticker_.prototype.run = function () {
     this.timeToPaint = (new Date().getTime()) - this.now;
     // spread the load value on 2 frames so the value is more stable
     this.load = ((this.timeToPaint / this.tickDuration * 100) + this.load) / 2 | 0;
-
     this.fps = Math.round(1000 / (this.now - (this.lastPaintAt || 0)));
+
     this.lastPaintAt = this.now;
     if (this.useAnimationFrame) {
         this.tickDuration = 16;
@@ -1184,18 +1241,18 @@ _Input = function _Input(scene) {
     that.mousepressed = false;
     this.mousereleased = false;
     this.keydown = false;
-    this.touchMoveSensibility = 3;
+    this.touchMoveSensibility = 20;
     this.enableCustomEvents = false;
 
     this.touchable = 'ontouchstart' in global;
 
     this.next = function () {
-        if(that.disableFor)
-            that.disableFor = that.disableFor - 1;
-        that.keyboardChange = {};
-        that.mousepressed = false;
-        that.mouse.click = undefined;
-        that.mousereleased = false;
+        if(this.disableFor)
+            this.disableFor = that.disableFor - 1;
+        this.keyboardChange = {};
+        this.mousepressed = false;
+        this.mouse.click = undefined;
+        this.mousereleased = false;
     }
 
     this.disableFor = 0;
@@ -1209,6 +1266,11 @@ _Input = function _Input(scene) {
 
     this.keyReleased = function (name) {
         return that.keyboardChange[name] !== undefined && !that.keyboardChange[name];
+    };
+
+    this.arrows = function arrows() {
+        /* Return true if any arrow key is pressed */
+        return this.keyboard.right || this.keyboard.left || this.keyboard.up || this.keyboard.down;
     };
 
     function fireEvent(name, value) {
@@ -1343,23 +1405,23 @@ _Input = function _Input(scene) {
             if (deltaY < -that.touchMoveSensibility) {
                 updateKeyChange('up', true);
                 updateKeyChange('down', false);
-            }
-            if (deltaY > that.touchMoveSensibility) {
+            } else if (deltaY > that.touchMoveSensibility) {
                 updateKeyChange('down', true);
                 updateKeyChange('up', false);
-            };
+            } else {
+                updateKeyChange('up', false);
+                updateKeyChange('down', false);
+            }
             if (deltaX < -that.touchMoveSensibility) {
                 updateKeyChange('left', true);
                 updateKeyChange('right', false);
-            }
-            if(deltaX > that.touchMoveSensibility) {
+            } else if(deltaX > that.touchMoveSensibility) {
                 updateKeyChange('right', true);
                 updateKeyChange('left', false);
-            };
-            // increase the control of the swipe in
-            // the long run.
-            that.touchStart.x += (deltaX / 10);
-            that.touchStart.y += (deltaY / 10);
+            } else {
+                updateKeyChange('left', false);
+                updateKeyChange('right', false);
+            }
         }
     });
 
@@ -1390,10 +1452,6 @@ _Input = function _Input(scene) {
         listen("contextmenu", function (e) {e.preventDefault()});
 };
 
-_Input.prototype.arrows = function arrows() {
-    /* Return true if any arrow key is pressed */
-    return this.keyboard.right || this.keyboard.left || this.keyboard.up || this.keyboard.down;
-};
 
 // Add an automatic pause to all the scenes when the user
 // quit the current window.
@@ -1573,7 +1631,8 @@ Layer.prototype.onTop = function onTop(color) {
 List = function List(list) {
     if (this.constructor !== List)
         return new List(list);
-    this.list = list || [];
+    // ensure that a List can be initialized with a list.
+    this.list = (list && (list.list || list)) || [];
     this.length = this.list.length;
     this.index = -1;
 };
@@ -1586,17 +1645,23 @@ List.prototype.add = function add(sprite) {
     this.length = this.list.length;
 };
 
+// alias
+List.prototype.append = List.prototype.add;
+
 List.prototype.remove = function remove(toRemove) {
+    var removed = false
     for (var i = 0, el; el = this.list[i]; i++) {
         if (el == toRemove) {
             this.list.splice(i, 1);
             // delete during the iteration is possible
             if (this.index > -1)
                 this.index = this.index - 1;
-            this.length = this.list.length;
-            return true;
+            i--;
+            removed = true;
         }
     }
+    this.length = this.list.length;
+    return removed;
 };
 
 List.prototype.iterate = function iterate() {
@@ -1607,6 +1672,42 @@ List.prototype.iterate = function iterate() {
     }
     return this.list[this.index];
 };
+
+List.prototype.pop = function pop() {
+    this.length -= 1;
+    return this.list.pop();
+};
+
+List.prototype.shift = function shift() {
+    this.index -= 1;
+    this.length -= 1;
+    return this.list.shift();
+};
+
+List.prototype.isIn = function isInList(el) {
+    for(var i=0; i<this.list.length; i++) {
+        if(this.list[i] == el) {
+            return true;
+        }
+    }
+    return false;
+}
+
+List.prototype.filter = function filterList(name, value) {
+    var newList = new List();
+    for(var i=0; i<this.list.length; i++) {
+        if(this.list[i][name] == value) {
+            newList.add(this.list[i]);
+        }
+    }
+    return newList;
+}
+
+List.prototype.empty = function () {
+    this.list = [];
+    this.length = 0;
+    this.index = -1;
+}
 
 var log_output = null;
 

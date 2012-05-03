@@ -30,8 +30,14 @@ function Controls(eng){
 
 
 	this.upgrade = function(sp){
+		console.log(sp);
 		var cur_lvl = sp.level;
-		var cost = sp.level[cur_lvl+1].cost;
+
+		if(cur_lvl==3){
+			console.log("at max level already");
+			return false;
+		}
+		var cost = sp.levels[cur_lvl+1].cost;
 
 		if(this.cash >= cost){
 			this.charge(cost);

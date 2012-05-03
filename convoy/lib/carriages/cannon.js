@@ -16,20 +16,27 @@ function Cannon (scene,layer){//inherits carrage
 	this.fireRate = 100;
 	this.f_angle = 0;
 
-	this.level = [];
-	this.level[2] = {
+	this.levels = [];
+	this.levels[2] = {
 		cost:250,
 		name:"Medium Pulse Cannon",
 	 	fireRate:80, 
-	 	maxhp: 200,
-	 	missile: this.missile_2
+	 	maxhp: 200
+	 	//missile: this.missile_2
 	};
-	this.level[3] = {cost:500,fireRate:50, name: "Heavy Pulse Cannon"};
+	this.levels[3] = {
+		cost:500,
+		fireRate:50,
+		maxhp: 300,
+		name: "Heavy Pulse Cannon"
+		//missile: this.missile_3
+	};
 
 	//Weapons
-	this.missile_1 = {"img":"assets/c1.png","w":4,"h":4,"x":100,"y":100, "dmg":22, speed:2, noTarget:true, "range":400};
-
-
+	this.missile = [];
+	this.missile[1] = {"img":"assets/c1.png","w":4,"h":4,"x":100,"y":100, "dmg":20, speed:2, noTarget:true, "range":400};
+	this.missile[2] = {"img":"assets/c2.png","w":6,"h":6,"x":100,"y":100, "dmg":30, speed:2, noTarget:true, "range":450};
+	this.missile[3] = {"img":"assets/c2.png","w":6,"h":6,"x":100,"y":100, "dmg":40, speed:3, noTarget:true, "range":550, "bulldose":true};
 
 	this.create = function(x,y){
 		this.x = x;
@@ -61,9 +68,9 @@ function Cannon (scene,layer){//inherits carrage
 
 	this.run = function(){
 
-		var range = this.missile_1.range;
-		var missile = this.missile_1;
-
+		var missile = this.missile[this.level];
+		var range = missile.range;
+		
 		this.findTarget(range);
 
 		if(this.target != null){
@@ -77,6 +84,23 @@ function Cannon (scene,layer){//inherits carrage
 			
 		}	
 
+	}
+
+	this.updateUI = function(lvl){
+
+		this.sprites.splice(this.sprites.indexOf(this.aimer),1);
+
+		//Remove old
+		this.aimer.remove();
+		//add new
+		this.aimer = this.addSprite({
+			img: "assets/cannon_sm2.png?",
+			w: 30,
+			h: 12,
+			x: this.x+4,
+			y: this.y+27
+		});
+		this.aimer.toBack();
 	}
 
 

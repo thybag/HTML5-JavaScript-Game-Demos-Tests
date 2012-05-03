@@ -9,7 +9,7 @@ function Turret (scene,layer){//inherits carrage
 	this.h = 60;
 
 	//functional
-	this.name = 'Missile Turret';
+	this.name = 'Light Missile Turret';
 	this.fireRate = 10;
 	this.hp = 100;
 	this.maxhp = this.hp;
@@ -17,9 +17,35 @@ function Turret (scene,layer){//inherits carrage
 	this.doFire = 0;
 	this.f_angle = 0;
 	this.sprites = [];
+	this.sustainFireTime = 22;
 
-	//Missile types
-	this.missile_1 = {"img":"assets/m1.png?","w":2,"h":4,"x":100,"y":100, "dmg":4, "range":300};
+	this.levels = [];
+	this.levels[2] = {
+		cost:300,
+		name:"Medium Missile Turret",
+	 	sustainFireTime: 30,
+	 	fireRate:8,
+	 	maxhp: 200
+	 	//missile: this.missile_2
+	};
+	this.levels[3] = {
+		cost:300,
+		sustainFireTime: 50,
+		maxhp: 300,
+		fireRate:8,
+		name: "Heavy Missile Turret"
+		//missile: this.missile_3
+	};
+
+	//Weapons /Missile types
+	this.missile = [];
+	this.missile[1] = {"img":"assets/m1.png","w":2,"h":4,"x":100,"y":100, "dmg":4, "range":300};
+	this.missile[2] = {"img":"assets/m1.png","w":2,"h":4,"x":100,"y":100, "dmg":8, "range":400};
+	this.missile[3] = {"img":"assets/m1.png","w":2,"h":4,"x":100,"y":100, "dmg":12, "range":550};
+
+
+
+	
 
 	this.create = function(x,y){
 		this.x = x;
@@ -51,18 +77,20 @@ function Turret (scene,layer){//inherits carrage
 	}
 	this.run = function(){
 
-		this.findTarget(this.missile_1.range);
-		
+		var missile = this.missile[this.level];
+		var range = missile.range;
 
+		this.findTarget(range);
+		
 		if(this.target != null){
 			this.f_angle= this.getAimAngle(this.aimer, this.target)
 			this.aimer.setAngle(this.f_angle);
 
 			this.doFire--;
-			if((engine.ticker.currentTick % 100) == 0)this.doFire = 22;
+			if((engine.ticker.currentTick % 100) == 0) this.doFire = this.sustainFireTime;
 
 			if(this.doFire > 0){
-				var m_attr = SimpleClone(this.missile_1);
+				var m_attr = SimpleClone(missile);
 				m_attr.x = this.aimer.x;
 				m_attr.y = this.aimer.y;
 				this.fire(this.target, m_attr);

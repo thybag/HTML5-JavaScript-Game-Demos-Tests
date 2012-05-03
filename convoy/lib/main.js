@@ -67,6 +67,7 @@ function Engine(scene, layer){
 					}));
 		mis.dmg = m.dmg;
 		mis.noTarget = m.speed;
+		if(typeof m.bulldose != 'undefined')mis.bulldose = m.bulldose;
 		if(typeof m.range != 'undefined')mis.range  = m.range;
 		if(typeof m.speed != 'undefined') mis.speed = m.speed;
 

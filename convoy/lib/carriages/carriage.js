@@ -22,6 +22,7 @@ function Carriage(scene,layer){
 	this.upgradeLevel = 1;
 	this.cost = 200;
 	this.ref_time = 0;
+	this.level = 1;
 	
 
 
@@ -111,5 +112,28 @@ function Carriage(scene,layer){
 		});
 	}
 	this.run = function(){}
+
+
+	this.upgrade = function(){
+		this.level++;
+
+		var lvl = this.levels[this.level];
+		if(typeof lvl == "undefined"){
+			console.log("no level found?!");
+		} else{
+			var oldmax = this.maxhp;
+			//update attrs
+			for (var i in lvl) {
+				this[i] = lvl[i];
+			}
+			//update hp
+			var diff = this.maxhp/oldmax;
+			this.hp = this.hp*diff;
+
+			this.updateUI(this.level);
+		}
+
+	}
+	this.updateUI = function(lvl){}
 
 }
