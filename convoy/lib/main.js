@@ -17,7 +17,11 @@ function Engine(scene, layer){
 		this.ticker = ticker;
 	}
 	
-	this.convoy.add(new Tanker(scene, layer));
+	this.init = function(){
+		this.convoy.add(new Tanker(scene, layer));
+		
+	}
+	
 
 	
 				

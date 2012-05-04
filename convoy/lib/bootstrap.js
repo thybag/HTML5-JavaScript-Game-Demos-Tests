@@ -1,4 +1,5 @@
 //Bootstap Game
+var controls;
 var bootstrap = function(){
 
 	//Create new Sprite.js Scene (effectively the Canvas that sprite js draws on to)
@@ -19,6 +20,7 @@ var bootstrap = function(){
 			//Pass ticker to engine
 			engine.setTicker(ticker);
 			controls = new Controls(engine);
+			engine.init();
 			//Start the ticker
 			ticker.run();
 		});

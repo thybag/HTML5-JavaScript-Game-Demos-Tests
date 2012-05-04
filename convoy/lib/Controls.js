@@ -1,7 +1,7 @@
-var controls;
 function Controls(eng){
 
 	this.cash = 1000;
+	this.population = 0;
 
 	this.buy = function(item){
 
@@ -33,6 +33,17 @@ function Controls(eng){
 		console.log(sp);
 		var cur_lvl = sp.level;
 
+
+		if(cur_lvl==1 && this.population < 120){
+			console.log("you need a higher population to upgrade to level 2 structures.");
+			return;
+		}
+		if(cur_lvl==2 && this.population < 300){
+			console.log("you need a higher population to upgrade to level 3 structures.");
+			return;
+		}
+
+
 		if(cur_lvl==3){
 			console.log("at max level already");
 			return false;
@@ -57,6 +68,13 @@ function Controls(eng){
 		this.cash += cost;
 		this.updateOptions();
 	}
+
+	this.updatePopulation = function(change){
+		this.population += change;
+
+		document.getElementById('pop').innerHTML = this.population;
+	}
+
 
 	this.updateCash = function(){
 		document.getElementById('cash').innerHTML = '$'+this.cash;

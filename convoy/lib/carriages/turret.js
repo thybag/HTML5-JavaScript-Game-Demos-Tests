@@ -52,11 +52,11 @@ function Turret (scene,layer){//inherits carrage
 		this.y = y;
 
 		this.aimer = this.addSprite({
-			img: "assets/missiles_sm.png?",
+			img: "assets/convoy/missiles_1.png",
 			w: 23,
-			h: 22,
+			h: 14,
 			x: this.x+7,
-			y: this.y+24
+			y: this.y+27
 		});
 		this.addSprite({
 			img: "assets/base_sm.png?",
@@ -98,6 +98,38 @@ function Turret (scene,layer){//inherits carrage
 			}
 			
 		}	
+	}
+
+	this.updateUI = function(lvl){
+
+		this.sprites.splice(this.sprites.indexOf(this.aimer),1);
+
+		//Remove old
+		this.aimer.remove();
+		delete this.aimer;
+		//add new
+
+		if(lvl==2){
+			this.aimer = this.addSprite({
+				img: "assets/convoy/missiles_2.png",
+				w: 23,
+				h: 18,
+				x: this.x+7,
+				y: this.y+26
+			});
+		}else if(lvl == 3){
+			this.aimer = this.addSprite({
+				img: "assets/convoy/missiles_3.png",
+				w: 23,
+				h: 22,
+				x: this.x+7,
+				y: this.y+24
+			});
+
+		}
+
+		
+		this.aimer.toBack();
 	}
 
 

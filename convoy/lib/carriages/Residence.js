@@ -13,7 +13,13 @@ function Residence (scene,layer){//inherits carrage
 	//Visual
 	this.w = 128;
 	this.h = 66;
+
+	//Set pop
+ 	controls.updatePopulation(100); 
 	
+ 	this.onDestroy = function(){
+ 		controls.updatePopulation(-100);
+ 	}
 
 	this.create = function(x,y){
 		this.x = x;

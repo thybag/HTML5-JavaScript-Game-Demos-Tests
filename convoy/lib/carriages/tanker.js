@@ -11,7 +11,9 @@ function Tanker (scene,layer){//inherits carrage
 	this.name = 'Tanker';
 	this.hp = 500;
 	this.maxhp = this.hp;
-
+	//Set pop
+ 	controls.updatePopulation(30); 
+	
 	this.create = function(x,y){
 		this.x = x;
 		this.y = y;

@@ -99,12 +99,17 @@ function Carriage(scene,layer){
 			this.h = spr.h;
 		});	*/
 	}
+
+	
 	this.destroy = function(){
+		this.onDestroy();
 		this.sprites.forEach(function(spr){
 			spr.remove();
 		});
 	}
 
+	this.onDestroy = function(){}
+	
 	this.update = function(){
 		this.run();
 		this.sprites.forEach(function(spr){
