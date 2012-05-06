@@ -34,7 +34,7 @@ function Engine(scene, layer){
 		if(world_x % 10 == 0)document.getElementById('trav').innerHTML = world_x/5;
 		document.getElementById('world').style.backgroundPosition = world_x+'px 0px';
 		//
-		this.createSwarm(world_x);
+		this.createSwarm(world_x,false);
 
 
 		//Update Badguys
@@ -45,16 +45,7 @@ function Engine(scene, layer){
 		this.missiles.forEach(function(bg){bg.update();});
 		this.dlg.update();
 		
-		if(this.inputs.mouse.click) {
-			if(inWorld(this.inputs.mouse.position.x,this.inputs.mouse.position.y-20)){
-				var sprite = this.convoy.getSelected(this.inputs.mouse.position.x,this.inputs.mouse.position.y-20);
-				
-				this.dlg.invoke(sprite);
-
-
-				
-			}
-		}
+		
 	
 	
 	}
@@ -78,18 +69,24 @@ function Engine(scene, layer){
 		this.missiles.push(mis);	
 	}
 
-	this.createSwarm = function(tick){
+	this.createSwarm = function(tick, sendnow){
 
+		if(typeof this.waveoffset == "undefined")this.waveoffset=1;
+		if(sendnow == true){
+			this.level++;
+			
+			this.waveoffset++;
+		}
 
 		var next_wave_in = 10;
 
 		sec_tick = Math.round(tick/24) % next_wave_in;
-		lvl = Math.round(tick/24)/next_wave_in;
+		lvl = (Math.round(tick/24)/next_wave_in)+this.waveoffset;
 		document.getElementById('incom_tim').innerHTML = next_wave_in-sec_tick;
 
 		//if world_x == tickpoint for badguys % 500?
 		//update level, releace level badguys
-		if(sec_tick == '0' && lvl != this.level){
+		if((sec_tick == '0' && lvl != this.level) || sendnow){
 			
 			var fl = new Flyer(scene, layer);
 			fl.create(-50,200);
@@ -107,6 +104,13 @@ function Engine(scene, layer){
 			fl.create(-120,120);
 			this.badguys.push(fl);
 
+			var fl = new Flyer(scene, layer);
+			fl.create(-190,240);
+			this.badguys.push(fl);
+			var fl = new Flyer(scene, layer);
+			fl.create(-210,120);
+			this.badguys.push(fl);
+
 			document.getElementById('lvl').innerHTML = lvl+1;
 
 		}
@@ -118,90 +122,6 @@ function Engine(scene, layer){
 	}
 	
 	
-}
-
-function Dialog(){
-	this.visable = false;
-	this.sprite = null;
-	var _this = this;
-	//Build dilaog
-	this.node = document.getElementById('carriage_option');
-	this.nodes = [];
-	this.nodes.name = document.createElement('strong');
-
-	this.nodes.health = document.createElement('div')
-	this.nodes.hp = document.createElement('span');
-	this.nodes.maxHp = document.createElement('span');
-
-	this.nodes.rep = document.createElement('div');
-	this.nodes.rep.className = 'opt';
-	this.nodes.rep.innerHTML = 'Repair';
-	this.nodes.upg = document.createElement('div');
-	this.nodes.upg.className = 'opt';
-	this.nodes.upg.innerHTML = 'Upgrade';
-
-
-	this.node.appendChild(this.nodes.rep);
-	this.node.appendChild(this.nodes.upg);
-
-	this.node.appendChild(this.nodes.name);
-	this.node.appendChild(document.createElement('br'));
-	this.node.appendChild(this.nodes.health);
-	
-
-	this.nodes.health.innerHTML = 'HP: ';
-	this.nodes.health.appendChild(this.nodes.hp);
-	this.nodes.health.appendChild(document.createTextNode('/'));
-	this.nodes.health.appendChild(this.nodes.maxHp);
-
-	this.invoke = function(sprite){
-		if(sprite==null){
-			this.hide();
-		}else{
-			this.sprite = sprite;
-			this.show(sprite.x);
-
-			this.set('name',	sprite.name);
-			this.set('hp', sprite.hp);//sprite.hp
-			this.set('maxHp',	sprite.maxhp);
-
-			//node.innerHTML = '<div class="opt">upgrade</div><div class="opt">Repair</div>';
-			//node.innerHTML += '<strong>'+sprite.name+'</strong><br>';
-			//node.innerHTML += 'HP: '+sprite.hp+'/'+sprite.maxhp;
-		}
-
-	}
-	this.show = function(x){
-		this.visable = true;
-
-		this.node.style.display = 'block';
-		this.node.style.top = '420px';
-		this.node.style.left = x+'px';
-	}
-	this.hide = function(){
-		this.node.style.display = 'none';
-		this.visable = false;
-	}
-
-	this.set = function(node,val){
-		console.log(this.nodes[node]);
-		this.nodes[node].innerHTML = val;
-
-	}
-	this.update = function(){
-		if(this.sprite != null){
-			this.nodes.hp.innerHTML = this.sprite.hp;
-			if(this.sprite.hp<1)this.hide();
-		}
-
-	}
-	this.nodes.rep.onclick = function(){
-		controls.repair(_this.sprite);
-		//_this.show(_this.sprite.x);
-	}
-	this.nodes.upg.onclick = function(){
-		controls.upgrade(_this.sprite);
-	}
 }
 
 function SimpleClone(obj){

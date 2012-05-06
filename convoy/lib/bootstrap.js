@@ -5,6 +5,7 @@ var bootstrap = function(){
 	//Create new Sprite.js Scene (effectively the Canvas that sprite js draws on to)
 	var scene = sjs.Scene({'useWebGL':false ,'w': window.innerWidth, 'h': 450});
 	var layer = scene.Layer("world");
+	var overlay = scene.Layer("overlay");
 	
 	//Load images needed to display
 	scene.loadImages([
@@ -19,7 +20,7 @@ var bootstrap = function(){
 			ticker = scene.Ticker(function() { engine.run(); });
 			//Pass ticker to engine
 			engine.setTicker(ticker);
-			controls = new Controls(engine);
+			controls = new Controls(engine, overlay);
 			engine.init();
 			//Start the ticker
 			ticker.run();

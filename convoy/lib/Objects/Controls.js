@@ -1,7 +1,15 @@
-function Controls(eng){
+function Controls(eng, overlay){
 
 	this.cash = 1000;
 	this.population = 0;
+
+
+	overlay.dom.addEventListener("click",function(){
+		if(inWorld(eng.inputs.mouse.position.x,eng.inputs.mouse.position.y-20)){
+				var sprite = eng.convoy.getSelected(eng.inputs.mouse.position.x,eng.inputs.mouse.position.y-20);
+				eng.dlg.invoke(sprite);
+		}
+	});
 
 	this.buy = function(item){
 
@@ -30,11 +38,11 @@ function Controls(eng){
 
 
 	this.upgrade = function(sp){
-		console.log(sp);
+		
 		var cur_lvl = sp.level;
 
 
-		if(cur_lvl==1 && this.population < 120){
+		if(cur_lvl==1 && this.population < 100){
 			console.log("you need a higher population to upgrade to level 2 structures.");
 			return;
 		}

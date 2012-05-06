@@ -22,13 +22,13 @@ function Flyer (scene,layer){//inherits carrage
 	this.run = function(){
 
 
-		if(this.target == null || this.target.hp <0){
-			this.target = this.findTarget();
-		} 
+		this.findTarget();
+		
 
 		if(this.target != null){
 			if (this.x == this.target.x-80) this.mode = 0;
-
+			if (this.x == this.target.x+80) this.mode = 0;
+			
 			var miss = SimpleClone(this.miss);
 			miss.x = this.x;
 			miss.y = this.y;

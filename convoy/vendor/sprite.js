@@ -713,7 +713,7 @@ Sprite.prototype.webGLUpdate = function webGLUpdate () {
 
 Sprite.prototype.update = function updateDomProperties () {
 
-    if(this.layer.scene.disableUpdate)
+    if(!this.layer || this.layer.scene.disableUpdate)
         return this;
 
     // This is the CPU heavy function.

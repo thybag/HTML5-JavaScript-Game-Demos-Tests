@@ -21,7 +21,7 @@ function BadGuy(scene,layer){
 
 	this.hit = function(dmg){
 		this.hp -= dmg;
-		if(this.hp < 0){
+		if(this.hp < 1){
 			//remove missile from our array
 			this.sprite.remove();
 			engine.badguys.splice(engine.badguys.indexOf(this),1);
@@ -35,9 +35,13 @@ function BadGuy(scene,layer){
 		if((engine.ticker.currentTick % this.fireRate) == 0) engine.addMissile(target,missileType);
 	}
 
-	this.findTarget = function(spr){
-		if(engine.convoy.carrages.length > 0){
-			return engine.convoy.carrages[Math.floor(Math.random()*engine.convoy.carrages.length)];
+	this.findTarget = function(range){
+
+		if(this.target == null || this.target.hp <1 || getDistance(this, this.target) > range){
+			if(engine.convoy.carrages.length > 0){
+				this.target = engine.convoy.carrages[Math.floor(Math.random()*engine.convoy.carrages.length)];
+				if(getDistance(this, this.target) > range) this.target = null;
+			}
 		}else{
 			return null;
 		}

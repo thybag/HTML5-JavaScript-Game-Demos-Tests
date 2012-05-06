@@ -1,8 +1,8 @@
 function Tanker (scene,layer){//inherits carrage
 	
-	//Globals
-	this.scene = scene;
-	this.layer = layer;
+	//Init parent
+	Carriage.call(this,scene,layer);
+
 	//Visual
 	this.img = 'tanker.png?_';
 	this.w = 144;
@@ -27,8 +27,12 @@ function Tanker (scene,layer){//inherits carrage
  		this.sprites.push(spr);
 	}
 
+	this.onDestroy = function(){
+ 		alert("Game over!");
+ 	}
+
 
 
 
 }
-Tanker.prototype = new Carriage;
+Tanker.prototype = new Carriage();

@@ -1,10 +1,9 @@
 function Turret (scene,layer){//inherits carrage
 
-	//Globals
-	this.scene = scene;
-	this.layer = layer;
+	//Init parent
+	Carriage.call(this,scene,layer);
+
 	//visual
-	this.img = 'turret.png?';
 	this.w = 30;
 	this.h = 60;
 
@@ -52,7 +51,7 @@ function Turret (scene,layer){//inherits carrage
 		this.y = y;
 
 		this.aimer = this.addSprite({
-			img: "assets/convoy/missiles_1.png",
+			img: "assets/convoy/turret_1.png",
 			w: 23,
 			h: 14,
 			x: this.x+7,
@@ -100,7 +99,7 @@ function Turret (scene,layer){//inherits carrage
 		}	
 	}
 
-	this.updateUI = function(lvl){
+	this.updateLvl = function(lvl){
 
 		this.sprites.splice(this.sprites.indexOf(this.aimer),1);
 
@@ -111,7 +110,7 @@ function Turret (scene,layer){//inherits carrage
 
 		if(lvl==2){
 			this.aimer = this.addSprite({
-				img: "assets/convoy/missiles_2.png",
+				img: "assets/convoy/turret_2.png",
 				w: 23,
 				h: 18,
 				x: this.x+7,
@@ -119,7 +118,7 @@ function Turret (scene,layer){//inherits carrage
 			});
 		}else if(lvl == 3){
 			this.aimer = this.addSprite({
-				img: "assets/convoy/missiles_3.png",
+				img: "assets/convoy/turret_3.png",
 				w: 23,
 				h: 22,
 				x: this.x+7,
@@ -134,4 +133,4 @@ function Turret (scene,layer){//inherits carrage
 
 
 }
-Turret.prototype = new Carriage;
+Turret.prototype = new Carriage();

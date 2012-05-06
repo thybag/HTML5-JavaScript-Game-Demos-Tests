@@ -1,13 +1,12 @@
 function Cannon (scene,layer){//inherits carrage
 	
-	this.scene = scene;
-	this.layer = layer;
-	this.ref_time = engine.ticker.currentTick;
+	//Init parent
+	Carriage.call(this, scene, layer);
 
 	//visual
 	this.w = 30;
 	this.h = 60;
-	this.sprites = [];
+
 	//functional
 	this.name = 'Pulse Cannon';
 	this.hp = 100;
@@ -15,6 +14,7 @@ function Cannon (scene,layer){//inherits carrage
 	this.cost = 250;
 	this.fireRate = 100;
 	this.f_angle = 0;
+
 
 	this.levels = [];
 	this.levels[2] = {
@@ -43,11 +43,11 @@ function Cannon (scene,layer){//inherits carrage
 		this.y = y;
 
 		this.aimer = this.addSprite({
-			img: "assets/cannon_sm.png?",
-			w: 30,
-			h: 12,
-			x: this.x+4,
-			y: this.y+27
+			img: "assets/convoy/cannon_1.png",
+			w: 24,
+			h: 9,
+			x: this.x+7,
+			y: this.y+30
 		});
 		this.addSprite({
 			img: "assets/base_sm.png?",
@@ -86,20 +86,32 @@ function Cannon (scene,layer){//inherits carrage
 
 	}
 
-	this.updateUI = function(lvl){
+	this.updateLvl = function(lvl){
 
 		this.sprites.splice(this.sprites.indexOf(this.aimer),1);
 
 		//Remove old
 		this.aimer.remove();
-		//add new
-		this.aimer = this.addSprite({
-			img: "assets/cannon_sm2.png?",
-			w: 30,
-			h: 12,
-			x: this.x+4,
-			y: this.y+27
-		});
+
+		if(lvl==2){
+			//add new
+			this.aimer = this.addSprite({
+				img: "assets/convoy/cannon_2.png",
+				w: 29,
+				h: 10,
+				x: this.x+4,
+				y: this.y+29
+			});
+		}else if(lvl==3){
+			this.aimer = this.addSprite({
+				img: "assets/convoy/cannon_3.png?",
+				w: 30,
+				h: 12,
+				x: this.x+4,
+				y: this.y+27
+			});
+		}
+		
 		this.aimer.toBack();
 	}
 
@@ -107,4 +119,4 @@ function Cannon (scene,layer){//inherits carrage
 
 
 }
-Cannon.prototype = new Carriage;
+Cannon.prototype = new Carriage();

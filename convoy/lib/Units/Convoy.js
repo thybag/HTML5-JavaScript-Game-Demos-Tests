@@ -49,7 +49,6 @@ function Convoy(scene,layer){ // collection of carrages
 	this.reshuffle = function(){
 		var nx = this.pos.x;
 		this.carrages.forEach(function(car){
-			console.log(car.x);
 			car.position(nx, car.y);
 			nx += car.w;
 		});

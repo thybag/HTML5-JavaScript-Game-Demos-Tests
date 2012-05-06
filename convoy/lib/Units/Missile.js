@@ -12,7 +12,7 @@ function Missile(target, sprite){
 
 	this.update = function(){
 
-		if(target.hp<0) this.noTarget = true;
+		if(target.hp<1) this.noTarget = true;
 
 		var m = this.sprite;
 		if(!this.noTarget || this.a==null){
@@ -43,7 +43,7 @@ function Missile(target, sprite){
 				)
 			){
 				this.explode();
-				console.log("autokill");
+				
 			}
 
 		}
@@ -61,7 +61,7 @@ function Missile(target, sprite){
 			//remove missile from our array
 			engine.missiles.splice(engine.missiles.indexOf(this),1);
 		}else{
-			console.log("bad remove");
+			
 			//engine.dead.push(this);
 		}
 		

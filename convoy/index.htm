@@ -46,23 +46,28 @@
 			}
 
 		</style> 
+		<!-- Sprite.js Framework -->
 		<script type="text/javascript" src='vendor/sprite.js'></script> 
 		<script type="text/javascript" src='vendor/lib/collision.js'></script> 
+		<!-- Bootstrap game -->
 		<script type="text/javascript" src='lib/bootstrap.js'></script> 
 		<script type="text/javascript" src='lib/main.js'></script> 
-		<script type="text/javascript" src='lib/Controls.js'></script>
-
-		<script type="text/javascript" src='lib/Missile.js'></script> 
-		
-		<script type="text/javascript" src='lib/badguys/badguy.js'></script> 
-		<script type="text/javascript" src='lib/badguys/flyer.js'></script> 
-
-		<script type="text/javascript" src='lib/carriages/carriage.js'></script> 
-		<script type="text/javascript" src='lib/carriages/tanker.js'></script> 
-		<script type="text/javascript" src='lib/carriages/turret.js'></script> 
-		<script type="text/javascript" src='lib/carriages/cannon.js'></script> 
-		<script type="text/javascript" src='lib/carriages/Residence.js'></script> 
-		<script type="text/javascript" src='lib/convoy.js'></script> 
+		<!-- General objects -->
+		<script type="text/javascript" src='lib/Objects/Controls.js'></script>
+		<script type="text/javascript" src='lib/Objects/Dialog.js'></script>
+		<!-- Base Units -->
+		<script type="text/javascript" src='lib/Units/Unit.js'></script>
+		<script type="text/javascript" src='lib/Units/Convoy.js'></script>
+		<script type="text/javascript" src='lib/Units/Missile.js'></script>
+		<!-- Badies -->
+		<script type="text/javascript" src='lib/Units/badguys/Badguy.js'></script> 
+		<script type="text/javascript" src='lib/Units/badguys/Flyer.js'></script> 
+		<!-- Goodies -->
+		<script type="text/javascript" src='lib/Units/carriages/Carriage.js'></script>
+		<script type="text/javascript" src='lib/Units/carriages/Tanker.js'></script> 
+		<script type="text/javascript" src='lib/Units/carriages/Turret.js'></script> 
+		<script type="text/javascript" src='lib/Units/carriages/Cannon.js'></script> 
+		<script type="text/javascript" src='lib/Units/carriages/Residence.js'></script> 
 		
 		
 
@@ -78,7 +83,7 @@
 			<div id='incoming'>
 				Enemies incoming <br/> T-<span id='incom_tim'>200</span> seconds<br/>
 
-				Send next wave?
+				<a href="javascript:engine.createSwarm(0,true);">Send next wave?</a>
 			</div>
 
 			<div class='main'>
