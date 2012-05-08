@@ -11,7 +11,7 @@ function Cannon (scene,layer){//inherits carrage
 	this.name = 'Pulse Cannon';
 	this.hp = 100;
 	this.maxhp = this.hp;
-	this.cost = 250;
+	this.cost = Cannon.cost;
 	this.fireRate = 100;
 	this.f_angle = 0;
 
@@ -20,13 +20,13 @@ function Cannon (scene,layer){//inherits carrage
 	this.levels[2] = {
 		cost:250,
 		name:"Medium Pulse Cannon",
-	 	fireRate:80, 
+	 	fireRate:90, 
 	 	maxhp: 200
 	 	//missile: this.missile_2
 	};
 	this.levels[3] = {
 		cost:500,
-		fireRate:50,
+		fireRate:90,
 		maxhp: 300,
 		name: "Heavy Pulse Cannon"
 		//missile: this.missile_3
@@ -34,35 +34,36 @@ function Cannon (scene,layer){//inherits carrage
 
 	//Weapons
 	this.missile = [];
-	this.missile[1] = {"img":"assets/c1.png","w":4,"h":4,"x":100,"y":100, "dmg":20, speed:2, noTarget:true, "range":400};
-	this.missile[2] = {"img":"assets/c2.png","w":6,"h":6,"x":100,"y":100, "dmg":30, speed:2, noTarget:true, "range":450};
-	this.missile[3] = {"img":"assets/c2.png","w":6,"h":6,"x":100,"y":100, "dmg":40, speed:3, noTarget:true, "range":550, "bulldose":true};
+
+	this.missile[1] = {"img":"assets/general/missiles.png","xoffset":5 ,"w":5,"h":6, "dmg":20, speed:2, noTarget:true, "range":400};
+	this.missile[2] = {"img":"assets/general/missiles.png","xoffset":5 ,"w":5,"h":6, "dmg":30, speed:2, noTarget:true, "range":450};
+	this.missile[3] = {"img":"assets/general/missiles.png","xoffset":12 ,"w":7,"h":7, "dmg":40, speed:3, noTarget:true, "range":550, "bulldose":true};
 
 	this.create = function(x,y){
 		this.x = x;
-		this.y = y;
+		this.y = y+30;
 
 		this.aimer = this.addSprite({
 			img: "assets/convoy/cannon_1.png",
 			w: 24,
 			h: 9,
 			x: this.x+7,
-			y: this.y+30
+			y: this.y
 		});
 		this.addSprite({
-			img: "assets/base_sm.png?",
+			img: "assets/convoy/base_1.png",
 			w: 28,
 			h: 37,
 			x: this.x+2,
-			y: this.y+30
+			y: this.y
 			
 		});
 		this.addSprite({
-			img: "assets/tracks_sm.png?1",
+			img: "assets/convoy/tracks_1.png",
 			w: 22,
 			h: 12,
 			x: this.x+5,
-			y: this.y+61
+			y: this.y+31
 		});
 	}
 
@@ -77,8 +78,9 @@ function Cannon (scene,layer){//inherits carrage
 			this.f_angle = this.getAimAngle(this.aimer, this.target)
 			this.aimer.setAngle(this.f_angle);
 			var m_attr = SimpleClone(missile);
-			m_attr.x = this.aimer.x;
-			m_attr.y = this.aimer.y;
+			var pos = this.aimer.center();
+			m_attr.x = pos.x;
+			m_attr.y = pos.y;
 
 			this.fire(this.target, m_attr);
 			
@@ -100,7 +102,7 @@ function Cannon (scene,layer){//inherits carrage
 				w: 29,
 				h: 10,
 				x: this.x+4,
-				y: this.y+29
+				y: this.y-1
 			});
 		}else if(lvl==3){
 			this.aimer = this.addSprite({
@@ -108,7 +110,7 @@ function Cannon (scene,layer){//inherits carrage
 				w: 30,
 				h: 12,
 				x: this.x+4,
-				y: this.y+27
+				y: this.y-3
 			});
 		}
 		
@@ -119,4 +121,5 @@ function Cannon (scene,layer){//inherits carrage
 
 
 }
+Cannon.cost = 250;
 Cannon.prototype = new Carriage();

@@ -23,6 +23,7 @@ function Unit(scene,layer){
 	//Basic Methods
 	//Position
 	this.position = function(x,y){
+
 		var x_diff = this.x - x;
 		var y_diff = this.y - y;
 
@@ -33,20 +34,27 @@ function Unit(scene,layer){
 		this.x = x;
 		this.y = y;
 	}
+
 	//Destroy
 	this.destroy = function(){
+
+		this.explode();
+
 		this.onDestroy();
 		this.sprites.forEach(function(spr){
 			spr.remove();
 		});
 	}
+
 	//update
 	this.update = function(){
+
 		this.run();
 		this.sprites.forEach(function(spr){
 			spr.update();
 		});
 	}
+
 	//Add sprite
 	this.addSprite = function(sp){
 		var  spr = this.scene.Sprite(sp.img,{
@@ -81,7 +89,29 @@ function Unit(scene,layer){
 
 	//Init obj
 	this.init = function(){
-		this.ref_time = engine.ticker.currentTick;
+		this.tickerOffset = engine.ticker.currentTick;
+	}
+
+	this.explode = function(){
+		var c=this.centre();
+		engine.explosions.create(c.x,c.y);
+		/*
+		console.log("bnag!");
+		var c = ;
+		spr = this.scene.Sprite("assets/explosions/exp2_0.png",{
+			"layer": this.layer, //Layer tanks will be displayed in.
+			"x": c.x, 	//X position of sprite
+			"y": c.y, 	//Y position of sprite
+			"w": 64, 	//width of sprite.
+			"h": 64 	//height of sprite.
+		});
+		spr.update();*/
+	}
+
+	this.centre = function(){
+		x = this.x+(this.w/2);
+		y = this.y+(this.h/2);
+		return {"x":x,"y":y};
 	}
 
 	//Init object

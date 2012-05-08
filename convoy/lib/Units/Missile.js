@@ -31,10 +31,10 @@ function Missile(target, sprite){
 		if(col !== false){ //false means there were no collisions
 			col.hit(this.dmg);
 			//remove missile (unless bulldose mode is one)
-			if(!(this.bulldose && col.hp<this.dmg)) this.explode();
+			if(!(this.bulldose && col.hp<this.dmg)) this.explode(true);
 		}
 
-		if(this.range < 0) this.explode();
+		if(this.range < 0) this.explode(true);
 
 		if(m.layer != null){ 
 			if(!(
@@ -42,7 +42,7 @@ function Missile(target, sprite){
 				(m.y>0 && m.y < m.layer.h)
 				)
 			){
-				this.explode();
+				this.explode(false);
 				
 			}
 
@@ -53,7 +53,9 @@ function Missile(target, sprite){
 		
 	}
 
-	this.explode = function(){
+	this.explode = function(expl){
+
+		if(expl) engine.explosions.create(this.sprite.x,this.sprite.y,1);
 
 		if(this.sprite.layer){
 			this.sprite.remove();

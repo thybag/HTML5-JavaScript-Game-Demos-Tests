@@ -1496,6 +1496,44 @@ global.addEventListener("blur", function (e) {
     }
 }, false);
 
+// Add an automatic pause to all the scenes when the user
+// quit the current window.
+global.addEventListener("keyup", function (e) {
+
+    if(e.keyCode != 80)return;
+
+    for (var i = 0; i < sjs.scenes.length; i++) {
+        var scene = sjs.scenes[i];
+        if (!scene.autoPause)
+            continue;
+        var anon = function (scene) {
+            inputSingleton.keyboard = {};
+            inputSingleton.keydown = false;
+            inputSingleton.mousedown = false;
+            // create a semi transparent layer on the game
+            if (scene.ticker && !scene.ticker.paused) {
+                scene.ticker.pause();
+                var div = overlay(0, 0, scene.w, scene.h);
+                div.innerHTML = '<h1>Paused</h1><p>Click or press any key to resume.</p>';
+                div.style.textAlign = 'center';
+                div.style.paddingTop = ((scene.h / 2) - 32) + 'px';
+                var listener = function (e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    scene.dom.removeChild(div);
+                    doc.removeEventListener('click', listener, false);
+                    doc.removeEventListener('keyup', listener, false);
+                    scene.ticker.resume();
+                }
+                doc.addEventListener('click', listener, false);
+                doc.addEventListener('keyup', listener, false);
+                scene.dom.appendChild(div);
+            }
+        }
+        anon(scene);
+    }
+}, false);
+
 Layer = function Layer(scene, name, options) {
 
     var domElement, needToCreate, domH, domW;

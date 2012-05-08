@@ -3,49 +3,11 @@
 	<head> 
 		<title>Convoy Command</title> 
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
-		<style type="text/css"> 
-			body {margin:0;padding:0; background-color:#D9D9F3;}
-			/*div {margin:0 auto;}*/
-			#world {background: url(bkg2.png) repeat-x; }
-			#titleBar {background-color:#000; color:#fff; padding:5px; font-weight:bold; font-family:arial}
+		
+		<link href='http://fonts.googleapis.com/css?family=Nova+Square' rel='stylesheet' type='text/css'>
+		<link href='assets/styles.css' rel="stylesheet" type='text/css'>
 
 
-			#controls{ position: absolute; 
-				top:480px; left:0;
-				background-color:grey;
-				display:block;
-				width:100%; 
-				height:80px;
-
-			}
-
-			.main {float:left;}
-
-			.buy {float:left; border:solid 2px; width:102px;height:68px;background-color:#eee;margin:2px;padding:2px; cursor:pointer;}
-			#controls .main div {float:left;}
-			.info {width:280px;}
-
-			#incoming {float:right; background-color:#000;color:green;padding:4px 8px;margin:6px 10px;}
-
-			#carriage_option {
-				position:absolute;
-				display:none;
-				background-color:#fff;
-				z-index:20;
-				padding:4px;
-				width:290px;
-			}
-			#carriage_option .opt {
-				height:40px;width:54px;float:right; margin:0 2px;padding:2px;
-				border:solid 1px;cursor:pointer;
-				text-align:center;
-			}
-			#carriage_option .opt:hover {
-
-				background-color:#eee;
-			}
-
-		</style> 
 		<!-- Sprite.js Framework -->
 		<script type="text/javascript" src='vendor/sprite.js'></script> 
 		<script type="text/javascript" src='vendor/lib/collision.js'></script> 
@@ -58,6 +20,7 @@
 		<!-- Base Units -->
 		<script type="text/javascript" src='lib/Units/Unit.js'></script>
 		<script type="text/javascript" src='lib/Units/Convoy.js'></script>
+		<script type="text/javascript" src='lib/Units/Explosion.js'></script>
 		<script type="text/javascript" src='lib/Units/Missile.js'></script>
 		<!-- Badies -->
 		<script type="text/javascript" src='lib/Units/badguys/Badguy.js'></script> 
@@ -69,11 +32,10 @@
 		<script type="text/javascript" src='lib/Units/carriages/Cannon.js'></script> 
 		<script type="text/javascript" src='lib/Units/carriages/Residence.js'></script> 
 		
-		
-
+	
 	</head> 
 	<body> 
-		<div id='titleBar'>Convoy Command</div>
+		<div class='titleBar'>Convoy Command</div>
 		<div id='world'></div>
 
 		<div id='carriage_option'></div>
@@ -96,25 +58,40 @@
 				</div>
 
 				<div>
-					<div class='buy' onclick="controls.buy('Turret');">
-						Buy Turret<br/>
+					<div class='buy' id='buyturret' onclick="controls.buy('Turret');">
+						<span class='type'>Turret: $300</span>
 
-						$300
+						<span class='buyword'>Buy</span>
+
+						
 					</div>
-					<div class='buy' onclick="controls.buy('Cannon');">
-						Buy Cannon<br/>
+					<div class='buy' id='buycannon' onclick="controls.buy('Cannon');">
+						<span class='type'>Cannon: $250</span>
+						<span class='buyword'>Buy</span>
 
-						$250
+						
 					</div>
-					<div class='buy' onclick="controls.buy('Residence');">
-						Buy Residence<br/>
+					<div class='buy' id='buyresidence'onclick="controls.buy('Residence');">
+						<span class='type'>Residence: $600</span>
+						<span class='buyword'>Buy</span>
 
-						$600
+						
 					</div>
 				</div>
 			</div>
 		
 		
+		</div>
+		<div style='position: absolute; 
+				top:559px; left:0;width:100%;'>
+			<div class='titleBar' >&nbsp;</div>
+			Convoy command is a HTML5/Javascript Tower Defence style game wirtten by Carl Saggs.<br/>
+			The game was written using the Sprite.js library and opensoruced under the MIT Licence.
+
+			Explosion image from http://opengameart.org/content/explosion (public domain)
+
+
+
 		</div>
 	</body> 
 </html> 

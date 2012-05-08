@@ -7,7 +7,7 @@ function Residence (scene,layer){//inherits carrage
 	this.name = 'Small Residence';
 	this.hp = 200;
 	this.maxhp = this.hp;
-	this.cost = 600;
+	this.cost = Residence.cost;
 	this.population = 80;
 	controls.updatePopulation(this.population);
 
@@ -34,33 +34,33 @@ function Residence (scene,layer){//inherits carrage
  	
 	
  	this.onDestroy = function(){
- 		controls.updatePopulation(this.population);
+ 		controls.updatePopulation(-this.population);
  	}
 
 	this.create = function(x,y){
 		this.x = x;
-		this.y = y;
+		this.y = y+30;
 
 		this.main = this.addSprite({
-			img: "assets/convoy/accommodation_1.png?dd2",
+			img: "assets/convoy/accommodation_1.png",
 			w: 128,
 			h: 48,
 			x: this.x+2,
-			y: this.y+22
+			y: this.y-8
 		});
 		this.addSprite({
-			img: "assets/tracks_sm.png?1",
+			img: "assets/convoy/tracks_1.png",
 			w: 22,
 			h: 12,
 			x: this.x+14,
-			y: this.y+62
+			y: this.y+32
 		});
 		this.addSprite({
-			img: "assets/tracks_sm.png?1",
+			img: "assets/convoy/tracks_1.png",
 			w: 22,
 			h: 12,
 			x: this.x+96,
-			y: this.y+62
+			y: this.y+32
 		});
 	}
 
@@ -79,7 +79,7 @@ function Residence (scene,layer){//inherits carrage
 				w: 128,
 				h: 55,
 				x: this.x+2,
-				y: this.y+15
+				y: this.y-15
 			});
 		}else if(lvl == 3){
 			this.main = this.addSprite({
@@ -87,7 +87,7 @@ function Residence (scene,layer){//inherits carrage
 				w: 128,
 				h: 63,
 				x: this.x+2,
-				y: this.y+7
+				y: this.y+33
 			});
 
 		}
@@ -99,4 +99,5 @@ function Residence (scene,layer){//inherits carrage
 
 
 }
+Residence.cost = 600;
 Residence.prototype = new Carriage();

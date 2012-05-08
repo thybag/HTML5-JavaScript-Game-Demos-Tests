@@ -13,10 +13,10 @@ function Dialog(){
 	this.nodes.maxHp = document.createElement('span');
 
 	this.nodes.rep = document.createElement('div');
-	this.nodes.rep.className = 'opt';
+	this.nodes.rep.className = 'opt rep';
 	this.nodes.rep.innerHTML = 'Repair';
 	this.nodes.upg = document.createElement('div');
-	this.nodes.upg.className = 'opt';
+	this.nodes.upg.className = 'opt upg';
 	this.nodes.upg.innerHTML = 'Upgrade';
 
 
@@ -54,7 +54,7 @@ function Dialog(){
 		this.visable = true;
 
 		this.node.style.display = 'block';
-		this.node.style.top = '420px';
+		this.node.style.top = '416px';
 		this.node.style.left = x+'px';
 	}
 	this.hide = function(){
@@ -66,13 +66,55 @@ function Dialog(){
 		this.nodes[node].innerHTML = val;
 	}
 	this.update = function(){
-		if(this.sprite != null){
-			this.set('name',	this.sprite.name);
-			this.set('hp', this.sprite.hp);//sprite.hp
-			this.set('maxHp',	this.sprite.maxhp);
 
-			if(this.sprite.hp<1)this.hide();
+		if(this.sprite != null){
+
+			var spr = this.sprite;
+
+			
+			this.set('name',	spr.name);
+			this.set('hp', spr.hp);//sprite.hp
+			this.set('maxHp',	spr.maxhp);
+
+			if(spr.hp<1)this.hide();
+
+			if(this.visable){
+
+				
+				var greenStyle = 'solid 2px #238E23';
+				var redStyle = 'solid 2px #ff0000';
+
+				//Update Repair data
+				var r_cost = controls.getRepairCost(spr);
+				if(controls.canRepair(spr)){
+					if(spr.hp == spr.maxhp){
+						this.nodes.rep.title = "Already at full health.";
+						this.nodes.rep.style.border = redStyle;
+					}else{
+						this.nodes.rep.title = '$'+ r_cost ;
+						this.nodes.rep.style.border = greenStyle;
+					}
+					
+				}else{
+					this.nodes.rep.title = 'Cannot afford to repair, need: $'+ r_cost;
+					this.nodes.rep.style.border = redStyle;
+				}
+				//Update 
+
+				var u_cost = controls.getUpgradeCost(spr);
+				if(controls.canUpgrade(spr)){
+					this.nodes.upg.title = '$'+ u_cost ;
+					this.nodes.upg.style.border = greenStyle;	
+				}else{
+					this.nodes.upg.style.border = redStyle;
+					this.nodes.upg.title = controls.getUpgradeIssue(spr);
+				}
+
+			}
+			
 		}
+
+		
 
 	}
 	this.nodes.rep.onclick = function(){

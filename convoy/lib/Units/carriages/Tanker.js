@@ -4,7 +4,7 @@ function Tanker (scene,layer){//inherits carrage
 	Carriage.call(this,scene,layer);
 
 	//Visual
-	this.img = 'tanker.png?_';
+	this.img = 'assets/convoy/tanker.png';
 	this.w = 144;
 	this.h = 74;
 	//functional data
@@ -12,7 +12,27 @@ function Tanker (scene,layer){//inherits carrage
 	this.hp = 500;
 	this.maxhp = this.hp;
 	//Set pop
- 	controls.updatePopulation(30); 
+	this.population = 20;
+ 	controls.updatePopulation(this.population); 
+
+
+	this.levels = [];
+	this.levels[2] = {
+		cost:600,
+		name:"Medium Tanker",
+	 	maxhp: 800,
+	 	population:30
+	 	//missile: this.missile_2
+	};
+	this.levels[3] = {
+		cost: 1000,
+		name:"Heavy Tanker",
+	 	maxhp: 1400,
+	 	population:50
+		//missile: this.missile_3
+	};
+
+
 	
 	this.create = function(x,y){
 		this.x = x;

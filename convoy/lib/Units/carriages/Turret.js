@@ -9,10 +9,10 @@ function Turret (scene,layer){//inherits carrage
 
 	//functional
 	this.name = 'Light Missile Turret';
-	this.fireRate = 10;
+	this.fireRate = 9;
 	this.hp = 100;
 	this.maxhp = this.hp;
-	this.cost = 300;
+	this.cost = Turret.cost;
 	this.doFire = 0;
 	this.f_angle = 0;
 	this.sprites = [];
@@ -38,9 +38,9 @@ function Turret (scene,layer){//inherits carrage
 
 	//Weapons /Missile types
 	this.missile = [];
-	this.missile[1] = {"img":"assets/m1.png","w":2,"h":4,"x":100,"y":100, "dmg":4, "range":300};
-	this.missile[2] = {"img":"assets/m1.png","w":2,"h":4,"x":100,"y":100, "dmg":8, "range":400};
-	this.missile[3] = {"img":"assets/m1.png","w":2,"h":4,"x":100,"y":100, "dmg":12, "range":550};
+	this.missile[1] = {"img":"assets/general/missiles.png", "xoffset":"20" ,"w":2, "h":2, "dmg":7, "range":300};
+	this.missile[2] = {"img":"assets/general/missiles.png", "xoffset":"20" ,"w":2, "h":2, "dmg":10, "range":400};
+	this.missile[3] = {"img":"assets/general/missiles.png", "xoffset":"20" ,"w":2, "h":2, "dmg":14, "range":550};
 
 
 
@@ -48,29 +48,29 @@ function Turret (scene,layer){//inherits carrage
 
 	this.create = function(x,y){
 		this.x = x;
-		this.y = y;
+		this.y = y+25;
 
 		this.aimer = this.addSprite({
 			img: "assets/convoy/turret_1.png",
 			w: 23,
 			h: 14,
 			x: this.x+7,
-			y: this.y+27
+			y: this.y+2
 		});
 		this.addSprite({
-			img: "assets/base_sm.png?",
+			img: "assets/convoy/base_1.png",
 			w: 28,
 			h: 37,
 			x: this.x+2,
-			y: this.y+30
+			y: this.y+5
 			
 		});
 		this.addSprite({
-			img: "assets/tracks_sm.png?1",
+			img: "assets/convoy/tracks_1.png",
 			w: 22,
 			h: 12,
 			x: this.x+5,
-			y: this.y+61
+			y: this.y+36
 		});
 		
 	}
@@ -90,8 +90,9 @@ function Turret (scene,layer){//inherits carrage
 
 			if(this.doFire > 0){
 				var m_attr = SimpleClone(missile);
-				m_attr.x = this.aimer.x;
-				m_attr.y = this.aimer.y;
+				var c = this.aimer.center();
+				m_attr.x = c.x;
+				m_attr.y = c.y;
 				this.fire(this.target, m_attr);
 
 			}
@@ -114,7 +115,7 @@ function Turret (scene,layer){//inherits carrage
 				w: 23,
 				h: 18,
 				x: this.x+7,
-				y: this.y+26
+				y: this.y+1
 			});
 		}else if(lvl == 3){
 			this.aimer = this.addSprite({
@@ -122,7 +123,7 @@ function Turret (scene,layer){//inherits carrage
 				w: 23,
 				h: 22,
 				x: this.x+7,
-				y: this.y+24
+				y: this.y-1
 			});
 
 		}
@@ -133,4 +134,5 @@ function Turret (scene,layer){//inherits carrage
 
 
 }
+Turret.cost = 300;
 Turret.prototype = new Carriage();

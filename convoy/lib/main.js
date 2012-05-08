@@ -8,9 +8,12 @@ function Engine(scene, layer){
 	this.badguys = [];
 	this.dead = [];
 	this.convoy = new Convoy(scene,layer);
+	this.explosions = new Explosions(scene,layer);
+
 	this.level = 0;
 
 	this.dlg = new Dialog();
+
 
 	//Add set ticker method to Engine
 	this.setTicker = function(ticker){
@@ -41,8 +44,11 @@ function Engine(scene, layer){
 		this.badguys.forEach(function(bg){bg.update();});
 		//Update convoy
 		this.convoy.update();
-		//
+		this.explosions.update();
+
+		//update missiles
 		this.missiles.forEach(function(bg){bg.update();});
+		//update dialogs
 		this.dlg.update();
 		
 		
@@ -58,27 +64,29 @@ function Engine(scene, layer){
 						"w":m.w,
 						"h":m.h,
 						"x":m.x,
-						"y":m.y
+						"y":m.y,
+						"xoffset": (m.xoffset) ? m.xoffset : 0,
+						"yoffset": (m.yoffset) ? m.yoffset : 0,
 					}));
 		mis.dmg = m.dmg;
 		mis.noTarget = m.speed;
 		if(typeof m.bulldose != 'undefined')mis.bulldose = m.bulldose;
 		if(typeof m.range != 'undefined')mis.range  = m.range;
 		if(typeof m.speed != 'undefined') mis.speed = m.speed;
-
+		mis.sprite.toBack();
 		this.missiles.push(mis);	
 	}
 
 	this.createSwarm = function(tick, sendnow){
 
-		if(typeof this.waveoffset == "undefined")this.waveoffset=1;
+		if(typeof this.waveoffset == "undefined")this.waveoffset=0;
 		if(sendnow == true){
 			this.level++;
 			
 			this.waveoffset++;
 		}
 
-		var next_wave_in = 10;
+		var next_wave_in = 20;
 
 		sec_tick = Math.round(tick/24) % next_wave_in;
 		lvl = (Math.round(tick/24)/next_wave_in)+this.waveoffset;
@@ -88,27 +96,29 @@ function Engine(scene, layer){
 		//update level, releace level badguys
 		if((sec_tick == '0' && lvl != this.level) || sendnow){
 			
+			var offset = (Math.floor(Math.random()*2)==1) ? this.layer.w+300 : 0;
+
 			var fl = new Flyer(scene, layer);
-			fl.create(-50,200);
+			fl.create(offset-50,200);
 			this.badguys.push(fl);
 			var fl = new Flyer(scene, layer);
-			fl.create(-70,180);
+			fl.create(offset-70,180);
 			this.badguys.push(fl);
 			var fl = new Flyer(scene, layer);
-			fl.create(-30,160);
+			fl.create(offset-30,160);
 			this.badguys.push(fl);
 			var fl = new Flyer(scene, layer);
-			fl.create(-110,240);
+			fl.create(offset-110,240);
 			this.badguys.push(fl);
 			var fl = new Flyer(scene, layer);
-			fl.create(-120,120);
+			fl.create(offset-120,120);
 			this.badguys.push(fl);
 
 			var fl = new Flyer(scene, layer);
-			fl.create(-190,240);
+			fl.create(offset-190,240);
 			this.badguys.push(fl);
 			var fl = new Flyer(scene, layer);
-			fl.create(-210,120);
+			fl.create(offset-210,120);
 			this.badguys.push(fl);
 
 			document.getElementById('lvl').innerHTML = lvl+1;

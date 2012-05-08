@@ -9,7 +9,27 @@ var bootstrap = function(){
 	
 	//Load images needed to display
 	scene.loadImages([
-		//'tank.png',
+		//convoy base
+		'assets/convoy/base_1.png',
+		'assets/convoy/tracks_1.png',
+		//accom
+		'assets/convoy/accommodation_1.png',
+		'assets/convoy/accommodation_2.png',
+		'assets/convoy/accommodation_3.png',
+		//cannon
+		'assets/convoy/cannon_1.png',
+		'assets/convoy/cannon_2.png',
+		'assets/convoy/cannon_3.png',
+		//turret
+		'assets/convoy/turret_1.png',
+		'assets/convoy/turret_2.png',
+		'assets/convoy/turret_3.png',
+
+		//general
+		'assets/general/exp_smaller.png',
+		'assets/general/exp2_0.png',
+		'assets/general/fix.png',
+		'assets/general/upgrade.png'
 		//'slug.png',
 		//'missile.png',
 		 ], 

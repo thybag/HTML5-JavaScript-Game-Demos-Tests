@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head> 
+		<title>Convoy Command</title> 
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+		
+		<link href='http://fonts.googleapis.com/css?family=Nova+Square' rel='stylesheet' type='text/css'>
+		<link href='assets/styles.css' rel="stylesheet" type='text/css'>
+		<style type='text/css'>
+		
+		#cover {
+			width:100%;
+			height:470px;
+			background-color:#111;
+			opacity:0.5;
+			position:absolute;
+		}
+		#intro{
+			width:740px;
+			margin: 0 auto;
+			background-color:#111;
+			padding:8px;
+			opacity:0.9;
+			border:solid 2px #238E23;
+ 			color:#238E23;
+ 			font-family: 'Nova Square', cursive;
+		}
+		#intro h1 {
+			margin:0;
+			padding:0px;
+		}
+		#intro p {margin-top:10px;}
+
+		.button {
+			margin:10px auto;width:180px;
+			border:solid 2px #238E23;
+ 			color:#238E23;
+ 			text-align:center;
+ 			cursor:pointer;
+ 			padding:4px;
+ 			display:block;
+ 			text-decoration:none;
+		}
+		.button:hover {background-color:#222;}
+		</style>
+		<script type="text/javascript">
+			window.addEventListener("load",function(){
+				var world_x=0;
+				setInterval(function(){
+					world_x++;
+					document.getElementById('world').style.backgroundPosition = world_x+'px 0px';
+
+				},36);
+
+			//Preload game assets if we can
+			setTimeout(function(){
+					// create object
+				 var imageObj = new Image();
+				 
+			     // set image list
+			     var images = [
+			     'assets/convoy/base_1.png',
+						'assets/convoy/tracks_1.png',
+						//accom
+						'assets/convoy/accommodation_1.png',
+						'assets/convoy/accommodation_2.png',
+						'assets/convoy/accommodation_3.png',
+						//cannon
+						'assets/convoy/cannon_1.png',
+						'assets/convoy/cannon_2.png',
+						'assets/convoy/cannon_3.png',
+						//turret
+						'assets/convoy/turret_1.png',
+						'assets/convoy/turret_2.png',
+						'assets/convoy/turret_3.png',
+
+						//general
+						'assets/general/exp_smaller.png',
+						'assets/general/exp2_0.png',
+						'assets/general/fix.png',
+						'assets/general/upgrade.png'
+			     ];
+		 
+			     // start preloading
+			     images.forEach(function(i){ imageObj.src=i; })
+				},50);
+				 
+
+
+
+			}, false);
+		</script>
+	</head> 
+	<body> 
+		<div class='titleBar'>Convoy Command</div>
+		<div id='world' style='width:100%;height:500px'>
+
+			<div id='cover'></div>
+			&nbsp;<br/>
+				<div id='intro'>
+					<h1>Convoy Command</h1>
+					<p>The year is 2631. In the aftermath of the forth great war, much of the planet has been converted in to a barren wasteland.</p>
+
+					<p>The Horthorion Empire, from its stronghold in earths one remaining habitable region, has worked tirelessly to fulfil is genocidal desires. Destroying the last non Horthorian city, Graidensphear in the “dark light” uprising of 2621.</p>
+
+					<p>In the 10 years since, humanity has struggled on, surving in a small number of hevily armed, always moving convoys. As a small virtue of the environmental damage done in the 4th great war, satellite mapping and radar have been rendered almost entirely useless. Meaning that so long as the convoys remain constantly on the move, they can largely avoid the full wrath of the Horthorion military might.</p>
+					<p>
+Despite this, the Horthorion Empire has been despatching increasingly powerful hunting parties in to the wastelands in search of the convoys, in the hopes of wiping out these reminants of humanity for good.</p>
+
+
+					<a class='button' href='game.html'>Take command</a>
+
+				</div>
+			
+		</div>
+
+		
+		<div style='position: absolute; 
+				top:479px; left:0;width:100%;'>
+			<div class='titleBar' >&nbsp;</div>
+			Convoy command is a HTML5/Javascript Tower Defence style game wirtten by Carl Saggs.<br/>
+			The game was written using the Sprite.js library and opensoruced under the MIT Licence.
+
+			Explosion image from http://opengameart.org/content/explosion (public domain)
+
+
+
+		</div>
+	</body> 
+</html> 
