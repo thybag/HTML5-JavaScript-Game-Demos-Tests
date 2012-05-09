@@ -17,6 +17,7 @@
 		<!-- General objects -->
 		<script type="text/javascript" src='lib/Objects/Controls.js'></script>
 		<script type="text/javascript" src='lib/Objects/Dialog.js'></script>
+		<script type="text/javascript" src='lib/Objects/Swarms.js'></script> 
 		<!-- Base Units -->
 		<script type="text/javascript" src='lib/Units/Unit.js'></script>
 		<script type="text/javascript" src='lib/Units/Convoy.js'></script>
@@ -24,7 +25,8 @@
 		<script type="text/javascript" src='lib/Units/Missile.js'></script>
 		<!-- Badies -->
 		<script type="text/javascript" src='lib/Units/badguys/Badguy.js'></script> 
-		<script type="text/javascript" src='lib/Units/badguys/Flyer.js'></script> 
+		<script type="text/javascript" src='lib/Units/badguys/Flyer.js'></script>
+		<script type="text/javascript" src='lib/Units/badguys/HevFlyer.js'></script>  
 		<!-- Goodies -->
 		<script type="text/javascript" src='lib/Units/carriages/Carriage.js'></script>
 		<script type="text/javascript" src='lib/Units/carriages/Tanker.js'></script> 
@@ -32,6 +34,7 @@
 		<script type="text/javascript" src='lib/Units/carriages/Cannon.js'></script> 
 		<script type="text/javascript" src='lib/Units/carriages/Residence.js'></script> 
 		
+
 	
 	</head> 
 	<body> 
@@ -43,9 +46,9 @@
 		<div id='controls'>
 
 			<div id='incoming'>
-				Enemies incoming <br/> T-<span id='incom_tim'>200</span> seconds<br/>
+				Enemies incoming <br/> T-<span id='incom_tim'>20</span> seconds<br/>
 
-				<a href="javascript:engine.createSwarm(0,true);">Send next wave?</a>
+				<a href="javascript:engine.swarmTick(true);">Send next wave?</a>
 			</div>
 
 			<div class='main'>

@@ -87,7 +87,7 @@ function Residence (scene,layer){//inherits carrage
 				w: 128,
 				h: 63,
 				x: this.x+2,
-				y: this.y+33
+				y: this.y-33
 			});
 
 		}

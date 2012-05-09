@@ -10,10 +10,12 @@ function Engine(scene, layer){
 	this.convoy = new Convoy(scene,layer);
 	this.explosions = new Explosions(scene,layer);
 
+	this.swarm = new Swarms();
+
 	this.level = 0;
 
 	this.dlg = new Dialog();
-
+	var _this = this;
 
 	//Add set ticker method to Engine
 	this.setTicker = function(ticker){
@@ -22,6 +24,7 @@ function Engine(scene, layer){
 	
 	this.init = function(){
 		this.convoy.add(new Tanker(scene, layer));
+		setInterval(function(){_this.swarmTick(false);},1000);
 		
 	}
 	
@@ -37,7 +40,7 @@ function Engine(scene, layer){
 		if(world_x % 10 == 0)document.getElementById('trav').innerHTML = world_x/5;
 		document.getElementById('world').style.backgroundPosition = world_x+'px 0px';
 		//
-		this.createSwarm(world_x,false);
+		//this.createSwarm(world_x,false);
 
 
 		//Update Badguys
@@ -73,10 +76,42 @@ function Engine(scene, layer){
 		if(typeof m.bulldose != 'undefined')mis.bulldose = m.bulldose;
 		if(typeof m.range != 'undefined')mis.range  = m.range;
 		if(typeof m.speed != 'undefined') mis.speed = m.speed;
+		if(typeof m.angle != 'undefined') mis.a = m.angle;
 		mis.sprite.toBack();
 		this.missiles.push(mis);	
 	}
 
+	this.swarmTick = function(activateByUser){
+		if(this.ticker.paused) return;
+
+		//Create swarm ticker.
+		if(typeof this.swarmTicker == "undefined")this.swarmTicker=0;
+
+		if(this.swarmTicker==this.swarm.interval || activateByUser){
+
+			var offset = (Math.floor(Math.random()*2)==1) ? this.layer.w+300 : 0;
+			var swa = this.swarm.getSwarm(this.level);
+			swa.forEach(function(s){
+				var fl = new window[s[0]](scene, layer);
+				fl.create(offset+s[1],s[2]);
+				_this.badguys.push(fl);
+			});
+
+			this.swarmTicker = 0;
+			this.level++;
+			document.getElementById('lvl').innerHTML = this.level;
+
+		}
+		document.getElementById('incom_tim').innerHTML = this.swarm.interval-this.swarmTicker;
+		if(activateByUser){
+			this.swarmTicker=0;
+		}
+		else{ 
+			this.swarmTicker++;
+		} 
+
+	}
+	/*
 	this.createSwarm = function(tick, sendnow){
 
 		if(typeof this.waveoffset == "undefined")this.waveoffset=0;
@@ -96,30 +131,14 @@ function Engine(scene, layer){
 		//update level, releace level badguys
 		if((sec_tick == '0' && lvl != this.level) || sendnow){
 			
-			var offset = (Math.floor(Math.random()*2)==1) ? this.layer.w+300 : 0;
+			
 
-			var fl = new Flyer(scene, layer);
-			fl.create(offset-50,200);
-			this.badguys.push(fl);
-			var fl = new Flyer(scene, layer);
-			fl.create(offset-70,180);
-			this.badguys.push(fl);
-			var fl = new Flyer(scene, layer);
-			fl.create(offset-30,160);
-			this.badguys.push(fl);
-			var fl = new Flyer(scene, layer);
-			fl.create(offset-110,240);
-			this.badguys.push(fl);
-			var fl = new Flyer(scene, layer);
-			fl.create(offset-120,120);
-			this.badguys.push(fl);
-
-			var fl = new Flyer(scene, layer);
-			fl.create(offset-190,240);
-			this.badguys.push(fl);
-			var fl = new Flyer(scene, layer);
-			fl.create(offset-210,120);
-			this.badguys.push(fl);
+			var swa = this.swarm.getSwarm(lvl);
+			swa.forEach(function(s){
+				var fl = new window[s[0]](scene, layer);
+				fl.create(offset-s[1],s[2]);
+				_this.badguys.push(fl);
+			});
 
 			document.getElementById('lvl').innerHTML = lvl+1;
 
@@ -129,7 +148,7 @@ function Engine(scene, layer){
 
 
 
-	}
+	}*/
 	
 	
 }

@@ -12,7 +12,7 @@ function Missile(target, sprite){
 
 	this.update = function(){
 
-		if(target.hp<1) this.noTarget = true;
+		if(!this.noTarget && target.hp<1) this.noTarget = true;
 
 		var m = this.sprite;
 		if(!this.noTarget || this.a==null){

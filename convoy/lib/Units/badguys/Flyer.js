@@ -9,7 +9,7 @@ function Flyer (scene,layer){//inherits carrage
 	this.w = 40;
 	this.h = 46;
 
-	this.miss = {"img":"assets/general/missiles.png","xoffset":23 ,"w":5,"h":5, "dmg":5, speed:2, noTarget:true, range:200};
+	this.miss = {"img":"assets/general/missiles.png","xoffset":23 ,"w":5,"h":5, "dmg":5, speed:2, noTarget:true, range:260};
 	
 
 	this.create = function(x,y){
