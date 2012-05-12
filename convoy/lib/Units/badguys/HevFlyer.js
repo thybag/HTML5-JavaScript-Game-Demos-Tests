@@ -2,7 +2,7 @@ function HevFlyer (scene,layer){//inherits carrage
 
 	BadGuy.call(this,scene,layer);
 
-	this.hp = 50;
+	this.hp = 65;
 	this.win = 50;
 
 	this.img = 'assets/badguys/hev_flyer.png';

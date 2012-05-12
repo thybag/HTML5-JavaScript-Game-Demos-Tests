@@ -10,7 +10,7 @@ function Engine(scene, layer){
 	this.convoy = new Convoy(scene,layer);
 	this.explosions = new Explosions(scene,layer);
 
-	this.swarm = new Swarms();
+	this.swarm = new Swarms(this.layer.w);
 
 	this.level = 0;
 
@@ -88,12 +88,10 @@ function Engine(scene, layer){
 		if(typeof this.swarmTicker == "undefined")this.swarmTicker=0;
 
 		if(this.swarmTicker==this.swarm.interval || activateByUser){
-
-			var offset = (Math.floor(Math.random()*2)==1) ? this.layer.w+300 : 0;
 			var swa = this.swarm.getSwarm(this.level);
 			swa.forEach(function(s){
 				var fl = new window[s[0]](scene, layer);
-				fl.create(offset+s[1],s[2]);
+				fl.create(s[1],s[2]);
 				_this.badguys.push(fl);
 			});
 

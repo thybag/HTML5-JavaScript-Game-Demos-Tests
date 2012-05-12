@@ -59,7 +59,7 @@
 				 
 			     // set image list
 			     var images = [
-			     'assets/convoy/base_1.png',
+			     		'assets/convoy/base_1.png',
 						'assets/convoy/tracks_1.png',
 						//accom
 						'assets/convoy/accommodation_1.png',
@@ -80,9 +80,15 @@
 						'assets/general/fix.png',
 						'assets/general/upgrade.png'
 			     ];
-		 
+		 		var c = 10;
 			     // start preloading
-			     images.forEach(function(i){ imageObj.src=i; })
+			     images.forEach(function(i){ 
+			     	setTimeout(function(){
+			     		imageObj.src=i; 
+			     		console.log(i);
+			     	},c);
+			     	c +=500;
+			     })
 				},50);
 				 
 
