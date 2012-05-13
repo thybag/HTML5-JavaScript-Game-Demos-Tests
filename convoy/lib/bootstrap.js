@@ -29,7 +29,15 @@ var bootstrap = function(){
 		'assets/general/exp_smaller.png',
 		'assets/general/exp2_0.png',
 		'assets/general/fix.png',
-		'assets/general/upgrade.png'
+		'assets/general/upgrade.png',
+		'assets/general/missiles.png',
+		'assets/general/background.png',
+
+		//badguys
+		'assets/badguys/flyer.png',
+		'assets/badguys/decoy.png',
+		'assets/badguys/hev_flyer.png',
+		'assets/badguys/drone_commander.png'
 		//'slug.png',
 		//'missile.png',
 		 ], 

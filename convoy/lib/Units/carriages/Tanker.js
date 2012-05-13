@@ -14,6 +14,8 @@ function Tanker (scene,layer){//inherits carrage
 	//Set pop
 	this.population = 20;
  	controls.updatePopulation(this.population); 
+ 	//this.id
+ 	this.ident = 'Tanker';
 
 
 	this.levels = [];

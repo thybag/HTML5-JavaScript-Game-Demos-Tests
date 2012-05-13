@@ -1,13 +1,13 @@
-function Flyer (scene,layer){//inherits carrage
+function Decoy(scene,layer){//inherits carrage
 
 	BadGuy.call(this,scene,layer);
 
-	this.hp = 20;
-	this.win = 25;
+	this.hp = 250;
+	this.win = 100;
 
-	this.img = 'assets/badguys/flyer.png';
-	this.w = 40;
-	this.h = 46;
+	this.img = 'assets/badguys/decoy.png?';
+	this.w = 54;
+	this.h = 76;
 
 	this.miss = {"img":"assets/general/missiles.png","xoffset":23 ,"w":5,"h":5, "dmg":5, speed:2, noTarget:true, range:260};
 	
@@ -38,10 +38,10 @@ function Flyer (scene,layer){//inherits carrage
 			if (this.x == this.target.x-80) this.mode = 0;
 			if (this.x == this.target.x+80) this.mode = 0;
 			
-			var miss = SimpleClone(this.miss);
-			miss.x = this.x;
-			miss.y = this.y;
-			this.fire(this.target, miss);
+			//var miss = SimpleClone(this.miss);
+			//miss.x = this.x;
+			//miss.y = this.y;
+			//this.fire(this.target, miss);
 		}
 			
 		if(this.x < 40){
@@ -50,12 +50,12 @@ function Flyer (scene,layer){//inherits carrage
 		} 
 		if(this.x > this.layer.w-60){
 			this.mode = 1;
-			this.sprites[0].setXOffset(40);
+			this.sprites[0].setXOffset(54);
 		} 
 
 		if(this.mode==0){if(Math.floor(Math.random()*150)==10)this.mode=2;}
-		if(this.mode==1)nx -=2; //this.sprite.position(this.sprite.x-2,this.sprite.y);
-		if(this.mode==2)nx +=2;
+		if(this.mode==1)nx -=1; //this.sprite.position(this.sprite.x-2,this.sprite.y);
+		if(this.mode==2)nx +=1;
 
 		this.position(this.x+nx, this.y);
 	}
@@ -63,6 +63,6 @@ function Flyer (scene,layer){//inherits carrage
 
 
 }
-Flyer.prototype = new BadGuy();
+Decoy.prototype = new BadGuy();
 
 

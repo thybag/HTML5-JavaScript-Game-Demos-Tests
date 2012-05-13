@@ -12,11 +12,13 @@ function Convoy(scene,layer){ // collection of carrages
 		//unit.dom.addEventListener('click', function(e) { console.log(this); });
 		//unit.dom.addEventListener('mouseover',function(e) { console.log(this); });
 		this.carrages.push(unit);
+		this.length++;
 	}
 	
 	this.remove = function(unit){
 		this.carrages.splice(this.carrages.indexOf(unit),1);
 		this.reshuffle();
+		this.length--;
 	}
 	
 	this.update = function(){
@@ -53,7 +55,6 @@ function Convoy(scene,layer){ // collection of carrages
 			nx += car.w;
 		});
 		this.px_len = nx-this.pos.x;
-		console.log("set new pxlen");
 	}
 
 }

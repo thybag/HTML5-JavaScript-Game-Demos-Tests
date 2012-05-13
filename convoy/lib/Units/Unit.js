@@ -109,9 +109,13 @@ function Unit(scene,layer){
 	}
 
 	this.centre = function(){
-		x = this.x+(this.w/2);
-		y = this.y+(this.h/2);
+		x = Math.round(this.x+(this.w/2));
+		y = Math.round(this.y+(this.h/2));
 		return {"x":x,"y":y};
+	}
+
+	this.coinFlip = function(){
+		return (Math.floor(Math.random()*2)==1);
 	}
 
 	//Init object

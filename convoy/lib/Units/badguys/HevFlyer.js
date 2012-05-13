@@ -48,11 +48,11 @@ function HevFlyer (scene,layer){//inherits carrage
 			
 		if(this.x < 40){
 			this.mode = 2;
-			//this.sprites[0].setXOffset(0);
+			this.sprites[0].setXOffset(0);
 		} 
 		if(this.x > this.layer.w-60){
 			this.mode = 1;
-			//this.sprites[0].setXOffset(40);
+			this.sprites[0].setXOffset(80);
 		} 
 
 		//if(this.mode==0){if(Math.floor(Math.random()*150)==10)this.mode=2;}

@@ -31,13 +31,21 @@ function Swarms(game_width){
 		['Decoy', -40, 120],
 		['Decoy', -80, 130]
 	];
+	var commandFleet = [
+		['CommandDrone',-100,40],
+		['Decoy', -40, 120],
+		['Decoy', -80, 130],
+		['Decoy', -125, 90],
+		['Flyer', -40, 240],
+		['Flyer', -50, 200]
+	];
 
 	//var combo_swarm = flyer_swarm.concat(bomber_swarm);
 
 	var swarms = {
 
 		//First swarm
-		0: [flyer_swarm,[['Decoy', -40, 120]]],
+		0: [flyer_swarm],
 		1: [flyer_swarm],
 		2: [bomber_swarm],
 		3: [flyer_swarm],
@@ -47,11 +55,37 @@ function Swarms(game_width){
 		7: [flyer_swarm,flyer_swarm,bomber_swarm],
 		8: [flyer_swarm,flyer_swarm,flyer_swarm],
 		9: [flyer_swarm,bomber_swarm,bomber_swarm],
-		10: [flyer_swarm,bomber_swarm,bomber_swarm,bomber_swarm],
-		11: [strong_bomber],
-		12: [bomber_swarm,bomber_swarm,bomber_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm],
-		13: [strong_bomber,strong_bomber,flyer_swarm],
-		14: [strong_bomber,strong_bomber,bomber_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm],
+		10: [flyer_swarm,flyer_swarm],
+		11: [flyer_swarm,flyer_swarm],
+		12: [flyer_swarm,flyer_swarm],
+		13: [flyer_swarm],
+		14: [flyer_swarm],
+		15: [flyer_swarm,bomber_swarm,bomber_swarm,bomber_swarm],
+		16: [strong_bomber],
+		17: [flyer_swarm,flyer_swarm,flyer_swarm],
+		18: [flyer_swarm,flyer_swarm],
+		19: [bomber_swarm,bomber_swarm,bomber_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm],
+		20: [flyer_swarm,flyer_swarm],
+		21: [flyer_swarm,flyer_swarm],
+		22: [strong_bomber,strong_bomber,flyer_swarm],
+		23: [flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm],
+		24: [flyer_swarm,flyer_swarm],
+		25: [strong_bomber,strong_bomber,bomber_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm],
+		26: [flyer_swarm,flyer_swarm],
+		27: [flyer_swarm,flyer_swarm],
+		28: [flyer_swarm,bomber_swarm,bomber_swarm],
+		29: [flyer_swarm,strong_bomber,strong_bomber,strong_bomber],
+		30: [flyer_swarm,strong_bomber,strong_bomber,strong_bomber,strong_bomber],
+		31: [strong_bomber,strong_bomber,bomber_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm],
+		32: [strong_bomber,strong_bomber,strong_bomber,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm],
+		33: [flyer_swarm,flyer_swarm],
+		34: [flyer_swarm,flyer_swarm],	
+		35: [strong_bomber,strong_bomber,strong_bomber,commandFleet],
+		36: [flyer_swarm],
+
+
+
+
 	};
 
 
@@ -95,11 +129,11 @@ function Swarms(game_width){
 
 		console.log("send swarm: " + no);
 
-		var sno = no % 15;
+		var sno = no % 36;
 	
-		if(no > 14 && sno==0){
-			console.log("srhink")
-			this.interval = Math.round(this.interval*0.75);
+		if(no > 19 && sno==0){
+			console.log("Complete!")
+			this.interval = Math.round(this.interval*0.5);
 		}
 
 

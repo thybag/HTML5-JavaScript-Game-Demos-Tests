@@ -26,9 +26,9 @@ function BadGuy(scene,layer){
 			if(engine.convoy.carrages.length > 0){
 				this.target = engine.convoy.carrages[Math.floor(Math.random()*engine.convoy.carrages.length)];
 				if(getDistance(this, this.target) > range) this.target = null;
+			}else{
+				this.target = null;
 			}
-		}else{
-			return null;
 		}
 	}
 

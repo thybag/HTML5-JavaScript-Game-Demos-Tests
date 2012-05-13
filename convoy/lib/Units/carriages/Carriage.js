@@ -24,7 +24,6 @@ function Carriage(scene,layer){
 			engine.convoy.remove(this);
 			//engine.badguys.splice(engine.badguys.indexOf(this),1);
 			//controls.fund(this.win);
-			console.log("BOOM!");
 		}
 		
 	}
