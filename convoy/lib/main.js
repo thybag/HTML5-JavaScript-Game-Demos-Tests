@@ -26,6 +26,8 @@ function Engine(scene, layer){
 	this.init = function(){
 		this.convoy.add(new Tanker(scene, layer));
 		setInterval(function(){_this.swarmTick(false);},1000);
+
+		controls.setUpAudio();
 		
 	}
 	
@@ -54,6 +56,8 @@ function Engine(scene, layer){
 		this.missiles.forEach(function(bg){bg.update();});
 		//update dialogs
 		this.dlg.update();
+
+
 		
 		
 	

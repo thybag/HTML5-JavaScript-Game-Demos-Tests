@@ -23,6 +23,26 @@ function Controls(eng, overlay){
 		}
 	});
 
+
+	this.setUpAudio = function(){
+		var audio = document.createElement('div');
+		audio.innerHTML = 'Music: On';
+		audio.id = 'audio_controls';
+		document.body.appendChild(audio);
+		audio.addEventListener("click",function(){
+			if(audio.innerHTML == 'Music: On'){
+				audio.innerHTML = 'Music: Off';
+				document.getElementById('audio').pause();
+				console.log("a");
+			}else{
+				audio.innerHTML = 'Music: On';
+				document.getElementById('audio').play();
+				console.log("b");
+			}
+		},false);
+	}
+
+
 	this.buy = function(item){
 
 		var cost = window[item].cost;

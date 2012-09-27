@@ -3,15 +3,21 @@ body {margin:0;padding:0; background-color:#D9D9F3;}
 #world {background: url(general/background.png) repeat-x; }
 .titleBar {background-color:#000; color:#fff; padding:5px; font-weight:bold; font-family: 'Nova Square', cursive;}
 
-
-#controls{ position: absolute; 
+#audio_controls {
+	position:absolute;
+	right:10px;
+	top:4px;
+	color:#fff;
+	cursor:pointer;
+}
+#controls{ 
+	position: absolute; 
 	top:479px; left:0;
 	background-color:#484848;
 	display:block;
 	width:100%; 
 	height:80px;
 	color:#ccc;
-
 }
 .buy {
 	font-family: 'Nova Square', cursive;
@@ -47,7 +53,10 @@ body {margin:0;padding:0; background-color:#D9D9F3;}
 .main {float:left;}
 
 #controls .main div {float:left;}
-.info {width:280px;}
+.info {
+	width:280px;
+	padding-left: 5px;
+}
 
 #incoming {
 
@@ -100,4 +109,8 @@ body {margin:0;padding:0; background-color:#D9D9F3;}
 	background-image: url(general/upgrade.png);
 	background-position: center 16px ;
 	background-repeat: no-repeat;
+}
+
+.credits {
+	font-family:arial;font-size:12px;margin:8px;
 }

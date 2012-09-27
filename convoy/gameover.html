@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head> 
+		<title>Convoy Command</title> 
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+		
+		<link href='http://fonts.googleapis.com/css?family=Nova+Square' rel='stylesheet' type='text/css'>
+		<link href='assets/styles.css' rel="stylesheet" type='text/css'>
+		<style type='text/css'>
+		
+		#cover {
+			width:100%;
+			height:470px;
+			background-color:#111;
+			opacity:0.5;
+			position:absolute;
+		}
+		#intro{
+			width:740px;
+			margin: 0 auto;
+			background-color:#111;
+			padding:8px;
+			opacity:0.9;
+			border:solid 2px #238E23;
+ 			color:#238E23;
+ 			font-family: 'Nova Square', cursive;
+		}
+		#intro h1 {
+			margin:0;
+			padding:0px;
+		}
+		#intro p {margin-top:10px;}
+
+		.button {
+			margin:10px auto;width:180px;
+			border:solid 2px #238E23;
+ 			color:#238E23;
+ 			text-align:center;
+ 			cursor:pointer;
+ 			padding:4px;
+ 			display:block;
+ 			text-decoration:none;
+		}
+		.button:hover {background-color:#222;}
+
+		</style>
+		<script type='text/javascript'>
+
+			window.addEventListener('load',function(){
+				var qp = {};
+
+				var q = window.location.search.substring(1).split('&');
+				for(var i=0; i<q.length;i++){
+					if(q=='')continue;
+					var s = q[i].split('=');
+					//Set details to query options
+					qp[s[0]] = s[1].replace(/%20/g, ' ');
+				}	
+				document.getElementById('t').innerHTML = qp.t;
+				console.log(document.getElementById('t'));
+				document.getElementById('p').innerHTML = qp.p;
+				console.log(qp);
+
+			});
+		</script>
+	</head> 
+	<body> 
+		<div class='titleBar'>Convoy Command</div>
+		<div id='world' style='width:100%;height:500px'>
+
+			<div id='cover'></div>
+			&nbsp;<br/>
+				<div id='intro'>
+					<h1>Game Over!</h1>
+					<p>With the command vehicle and its power source gone the inhabitence of the convoy were left defencless. The horthorion miltary were quick to surround the convoy and brutally exterminate the remaining population.</p>
+
+					<p>Let us hope the remaining few convoys are blessed with a better command... so few now remain.</p>
+
+					<p>You're convoy traveled <strong id='t'>0</strong> meters and had a population of <strong id='p'>0</strong> before being destroyed.</p>
+
+					<a class='button' href='game.html'>Try again</a>
+
+				</div>
+			
+		</div>
+
+		
+		<div style='position: absolute; 
+				top:479px; left:0;width:100%;'>
+			<div class='titleBar' >&nbsp;</div>
+
+
+
+			<p class='credits'><strong>Convoy Command</strong><br/>
+
+			Convoy command is a HTML5/Javascript Tower Defence style game wirtten by <a href='http://userbag.co.uk'>Carl Saggs</a>.<br/>
+
+			The game was written using the <a href='https://github.com/batiste/sprite.js/'>Sprite.js</a> library and is open source software under the terms of the MIT Licence.<br/><br/>
+
+			Explosion sprite by Cuzco <a href='http://opengameart.org/content/explosion'>source<a/> (public domain)<br/>
+			Music is Sandblaster by Clearside - <a href='http://opengameart.org/content/dark-electronic-rock-instrumental-nin-style'>source<a/> (CC-BY-SA 3.0)</p>
+
+
+		</div>
+	</body> 
+</html> 
