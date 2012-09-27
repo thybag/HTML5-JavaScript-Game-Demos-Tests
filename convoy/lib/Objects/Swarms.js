@@ -31,6 +31,7 @@ function Swarms(game_width){
 		['Decoy', -40, 120],
 		['Decoy', -80, 130]
 	];
+
 	var commandFleet = [
 		['CommandDrone',-100,40],
 		['Decoy', -40, 120],
@@ -39,6 +40,24 @@ function Swarms(game_width){
 		['Flyer', -40, 240],
 		['Flyer', -50, 200]
 	];
+
+	var defended_flyer_swarm = 
+		[
+			['Flyer', -50, 200],
+			['Decoy', -70, 180],
+			['Flyer', -30, 160],
+			['Decoy', -110, 240],
+			['Flyer', -120, 120],
+			['Decoy', -190, 240],
+			['Flyer', -60, 155],
+			['Decoy', -210, 170],
+			['Decoy', -40, 120],
+			['Decoy', -80, 130],
+			['HevFlyer', -110, 110],
+			['HevFlyer', -70, 80],
+			['HevFlyer', -160, 70],
+			['HevFlyer', -100, 125],
+		];
 
 	//var combo_swarm = flyer_swarm.concat(bomber_swarm);
 
@@ -78,11 +97,14 @@ function Swarms(game_width){
 		30: [flyer_swarm,strong_bomber,strong_bomber,strong_bomber,strong_bomber],
 		31: [strong_bomber,strong_bomber,bomber_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm],
 		32: [strong_bomber,strong_bomber,strong_bomber,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm],
-		33: [flyer_swarm,flyer_swarm],
-		34: [flyer_swarm,flyer_swarm],	
-		35: [strong_bomber,strong_bomber,strong_bomber,commandFleet],
+		33: [defended_flyer_swarm,flyer_swarm],
+		34: [defended_flyer_swarm,flyer_swarm],	
+		35: [strong_bomber,strong_bomber,strong_bomber,defended_flyer_swarm,commandFleet],
 		36: [flyer_swarm],
-
+		37: [flyer_swarm,defended_flyer_swarm,defended_flyer_swarm],
+		38: [flyer_swarm,flyer_swarm,defended_flyer_swarm,defended_flyer_swarm],
+		39: [strong_bomber,strong_bomber,strong_bomber,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm,defended_flyer_swarm,defended_flyer_swarm],
+		40: [commandFleet,flyer_swarm,commandFleet,flyer_swarm]
 
 
 
