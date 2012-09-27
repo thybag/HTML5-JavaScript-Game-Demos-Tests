@@ -34,6 +34,8 @@ function Tanker (scene,layer){//inherits carrage
 		//missile: this.missile_3
 	};
 
+	this.reTarget = function(unit){}; // do nothing
+
 
 	
 	this.create = function(x,y){
@@ -50,7 +52,12 @@ function Tanker (scene,layer){//inherits carrage
 	}
 
 	this.onDestroy = function(){
- 		alert("Game over!");
+		
+
+		var t = Math.round(engine.ticker.currentTick/5);
+		var p = controls.population;
+
+ 		document.location = 'gameover.html?t='+t+'&p='+p;
  	}
 
 

@@ -5,8 +5,22 @@ function Controls(eng, overlay){
 
 
 	overlay.dom.addEventListener("click",function(){
-		var sprite = eng.convoy.getSelected(eng.inputs.mouse.position.x,eng.inputs.mouse.position.y);
+		var x = eng.inputs.mouse.position.x; 
+		var y = eng.inputs.mouse.position.y;
+
+		var sprite = eng.convoy.getSelected(x,y);
 		eng.dlg.invoke(sprite);
+
+		//If we didnt get a carrage, see if we targeted a bad guy!
+		if(sprite === null){
+			eng.badguys.forEach(function(unit){
+				if(sjs.collision.isPointInRectangle(x,y,unit)){
+					console.log("..")
+					unit.makeTarget();
+					return;
+				}
+			});
+		}
 	});
 
 	this.buy = function(item){

@@ -2,7 +2,7 @@ function Decoy(scene,layer){//inherits carrage
 
 	BadGuy.call(this,scene,layer);
 
-	this.hp = 250;
+	this.hp = 350;
 	this.win = 100;
 
 	this.img = 'assets/badguys/decoy.png?';

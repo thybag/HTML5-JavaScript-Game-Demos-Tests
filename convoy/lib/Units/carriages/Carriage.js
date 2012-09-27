@@ -26,6 +26,14 @@ function Carriage(scene,layer){
 			//controls.fund(this.win);
 		}
 		
+	}	
+
+	this.getRange = function(){
+		return (typeof this.missile[this.level] != 'undefined') ? this.missile[this.level].range : 0;
+	}
+
+	this.reTarget = function(unit){
+		if(getDistance(this, unit) < this.getRange()) this.target = unit;
 	}
 
 	this.findTarget = function(range){

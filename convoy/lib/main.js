@@ -28,8 +28,6 @@ function Engine(scene, layer){
 		
 	}
 	
-
-	
 				
 	//Create run method which will be called each time the 
 	//game loop runs.

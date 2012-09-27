@@ -35,14 +35,20 @@ function Convoy(scene,layer){ // collection of carrages
 			
 			nx += car.w;
 		});
-
 	}
+
+	this.reTarget = function(unit){
+		this.carrages.forEach(function(car){ car.reTarget(unit); });
+	}
+	
 
 	this.getSelected = function(x,y){
 		var carriage = null;
+		//We cant return from inside this for some reason, so just store
 		this.carrages.forEach(function(car){
 			if(sjs.collision.isPointInRectangle(x,y,car)){
 				carriage = car;
+				return;
 			}
 		});
 		return carriage;

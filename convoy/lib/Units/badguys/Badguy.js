@@ -32,6 +32,20 @@ function BadGuy(scene,layer){
 		}
 	}
 
+	this.makeTarget = function(){
+		this.select();
+		engine.convoy.reTarget(this);
+		
+	}
+
+	this.select = function(){
+		var s = this.sprites[0].dom;
+
+		s.style.border = 'dotted 1px red';
+
+		setTimeout(function(){ s.style.border='' },200);
+	}
+
 
 	this.create = function(x,y){}
 

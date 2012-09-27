@@ -29,7 +29,8 @@ function Residence (scene,layer){//inherits carrage
 		population:200
 	}
 
-
+	this.reTarget = function(unit){}; // do nothing
+	
 	//Set pop
  	
 	
