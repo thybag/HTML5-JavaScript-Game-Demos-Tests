@@ -20,6 +20,7 @@ function Engine(scene, layer){
 	//Add set ticker method to Engine
 	this.setTicker = function(ticker){
 		this.ticker = ticker;
+		this.ticker.realTick = 0;//add counter for real ticks
 	}
 	
 	this.init = function(){
@@ -32,9 +33,11 @@ function Engine(scene, layer){
 	//Create run method which will be called each time the 
 	//game loop runs.
 	this.run = function(){
+
+		this.ticker.realTick++;
 	
 		//update world.
-		world_x = this.ticker.currentTick;
+		world_x = this.ticker.realTick;
 		if(world_x % 10 == 0)document.getElementById('trav').innerHTML = world_x/5;
 		document.getElementById('world').style.backgroundPosition = world_x+'px 0px';
 		//

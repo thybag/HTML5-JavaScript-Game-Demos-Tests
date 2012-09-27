@@ -54,7 +54,7 @@ function Tanker (scene,layer){//inherits carrage
 	this.onDestroy = function(){
 		
 
-		var t = Math.round(engine.ticker.currentTick/5);
+		var t = Math.round(engine.ticker.realTick/5);
 		var p = controls.population;
 
  		document.location = 'gameover.html?t='+t+'&p='+p;
