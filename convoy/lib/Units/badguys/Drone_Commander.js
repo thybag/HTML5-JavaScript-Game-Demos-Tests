@@ -2,7 +2,7 @@ function CommandDrone (scene,layer){//inherits carrage
 
 	BadGuy.call(this,scene,layer);
 
-	this.hp = 2500;
+	this.hp = 3500;
 	this.win = 100;
 
 	this.img = 'assets/badguys/drone_commander.png';
