@@ -25,7 +25,7 @@ function Engine(scene, layer){
 	
 	this.init = function(){
 		this.convoy.add(new Tanker(scene, layer));
-		setInterval(function(){_this.swarmTick(false);},1000);
+		setInterval(function(){_this.swarmTick(false); controls.syncAudio();},1000);
 
 		controls.setUpAudio();
 		

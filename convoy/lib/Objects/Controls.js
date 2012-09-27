@@ -42,6 +42,23 @@ function Controls(eng, overlay){
 		},false);
 	}
 
+	//Sync audio with puase, to try and stop & start it again depending on the users settings
+	this.syncAudio = function(){
+
+		var a = document.getElementById('audio');
+		//Ensure music pauses while the game is paused (if audio is enabled!)
+		if(engine.ticker.paused){
+			if(!a.paused){ a.pause(); } 
+		}else{
+			//If audio is pausedbut controls say is enabled, we want to renable after a pause
+			if(a.paused && document.getElementById('audio_controls').innerHTML == 'Music: On'){
+				a.play();
+			} 
+		}
+
+
+	}
+
 
 	this.buy = function(item){
 
