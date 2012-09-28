@@ -104,7 +104,8 @@ function Swarms(game_width){
 		37: [flyer_swarm,defended_flyer_swarm,defended_flyer_swarm],
 		38: [flyer_swarm,flyer_swarm,defended_flyer_swarm,defended_flyer_swarm],
 		39: [strong_bomber,strong_bomber,strong_bomber,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm,flyer_swarm,defended_flyer_swarm,defended_flyer_swarm],
-		40: [commandFleet,flyer_swarm,commandFleet,flyer_swarm]
+		40: [commandFleet,flyer_swarm,commandFleet,flyer_swarm,flyer_swarm],
+		41: [flyer_swarm]
 
 
 
@@ -151,7 +152,7 @@ function Swarms(game_width){
 
 		console.log("send swarm: " + no);
 
-		var sno = no % 36;
+		var sno = no % 40;
 	
 		if(no > 19 && sno==0){
 			console.log("Complete!")

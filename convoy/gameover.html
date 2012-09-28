@@ -59,6 +59,20 @@
 				document.getElementById('t').innerHTML = qp.t;
 				document.getElementById('p').innerHTML = qp.p;
 
+				var message;
+				//Messsage depends on distance
+				if(qp.t < 5000){
+					message = 'Let us hope the remaining few convoys are blessed with a better command... so few now remain.';
+				}
+				if(qp.t > 4999){
+					message = 'Despite this loss, a single convoy holding out so long under such fire will not be somthing the horthorion\'s soon forget.';
+				}
+				if(qp.t > 10000){
+					message = 'Although our losses were heavy, we for the first time in 5 years were able to destroy horthorion drone commander. Maybe at the very least they will think twice before sending raiders after our convoys in future.';
+				}
+
+				document.getElementById('msg').innerHTML = message;
+
 				var audio = document.createElement('div');
 				audio.innerHTML = 'Music: On';
 				audio.id = 'audio_controls';
@@ -91,7 +105,7 @@
 					<h1>Game Over!</h1>
 					<p>With the command vehicle and its power source gone the inhabitence of the convoy were left defencless. The horthorion miltary were quick to surround the convoy and brutally exterminate the remaining population.</p>
 
-					<p>Let us hope the remaining few convoys are blessed with a better command... so few now remain.</p>
+					<p id='msg'></p>
 
 					<p>You're convoy traveled <strong id='t'>0</strong> meters and had a population of <strong id='p'>0</strong> before being destroyed.</p>
 
