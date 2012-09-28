@@ -53,6 +53,9 @@ function Dialog(){
 	this.show = function(x){
 		this.visable = true;
 
+		//Ensure dialog fits on screen
+		if(x+290 > engine.scene.w) x = x-((x+290) % engine.scene.w)-15;
+
 		this.node.style.display = 'block';
 		this.node.style.top = '416px';
 		this.node.style.left = x+'px';
