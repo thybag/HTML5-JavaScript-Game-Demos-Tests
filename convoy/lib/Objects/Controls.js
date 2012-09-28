@@ -79,6 +79,7 @@ function Controls(eng, overlay){
 		if(this.canRepair(sp)){
 			this.charge(this.getRepairCost(sp));
 			sp.hp = sp.maxhp;
+			sp.showDmg();
 		}else{
 			console.log("Cannot afford action");
 		}

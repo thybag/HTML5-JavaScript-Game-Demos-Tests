@@ -13,11 +13,15 @@ function Carriage(scene,layer){
 
 	//To impliment by child object
 	this.create = function(){}
+	this.showDmg = function(hp){}
 	this.updateLvl = function(lvl){}
 
 	//Take damage
 	this.hit = function(dmg){
 		this.hp -= dmg;
+
+		this.showDmg();
+
 		if(this.hp <= 0){
 			//remove missile from our array
 			this.destroy();

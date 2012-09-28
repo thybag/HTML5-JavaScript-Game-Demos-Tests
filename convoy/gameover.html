@@ -59,10 +59,29 @@
 				document.getElementById('t').innerHTML = qp.t;
 				document.getElementById('p').innerHTML = qp.p;
 
+				var audio = document.createElement('div');
+				audio.innerHTML = 'Music: On';
+				audio.id = 'audio_controls';
+				document.body.appendChild(audio);
+				audio.addEventListener("click",function(){
+					if(audio.innerHTML == 'Music: On'){
+						audio.innerHTML = 'Music: Off';
+						document.getElementById('audio').pause();
+						console.log("a");
+					}else{
+						audio.innerHTML = 'Music: On';
+						document.getElementById('audio').play();
+						console.log("b");
+					}
+				},false);
+
 			});
 		</script>
 	</head> 
 	<body> 
+		<audio autoplay="autoplay" id='audio' loop='loop'>
+		  <source src="assets/sfx/intro.ogg" type="audio/ogg" />
+		</audio>
 		<div class='titleBar'>Convoy Command</div>
 		<div id='world' style='width:100%;height:500px'>
 
@@ -97,7 +116,8 @@
 				The game was written using the <a href='https://github.com/batiste/sprite.js/' target='_blank'>Sprite.js</a> library and is open source software under the terms of the MIT Licence.<br/><br/>
 
 				Explosion sprite by Cuzco <a href='http://opengameart.org/content/explosion' target='_blank'>source<a/> (public domain)<br/>
-				Music is Sandblaster by Clearside - <a href='http://opengameart.org/content/dark-electronic-rock-instrumental-nin-style' target='_blank'>source<a/> (CC-BY-SA 3.0)
+				Game music is Sandblaster by Clearside - <a href='http://opengameart.org/content/dark-electronic-rock-instrumental-nin-style' target='_blank'>source<a/> (CC-BY-SA 3.0)<br/>
+				Death music is intro by Metaruka - <a href='http://opengameart.org/content/game-game' target='_blank'>source<a/> (CC-BY-SA 3.0)
 			</p>
 
 

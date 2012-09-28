@@ -32,6 +32,15 @@ function Cannon (scene,layer){//inherits carrage
 		//missile: this.missile_3
 	};
 
+	this.showDmg = function(){
+		if(this.hp < (this.maxhp/4)){ //Less than 25% health
+			this.sprites[1].offset(0,37);
+		}else{
+			this.sprites[1].offset(0,0);
+		}
+	}
+
+
 	//Weapons
 	this.missile = [];
 

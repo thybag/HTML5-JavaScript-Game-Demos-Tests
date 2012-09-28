@@ -34,6 +34,14 @@ function Tanker (scene,layer){//inherits carrage
 		//missile: this.missile_3
 	};
 
+	this.showDmg = function(){
+		if(this.hp < (this.maxhp/5)){
+			this.sprites[0].offset(0,74);
+		}else{
+			this.sprites[0].offset(0,0);
+		}
+	}
+
 	this.reTarget = function(unit){}; // do nothing
 
 

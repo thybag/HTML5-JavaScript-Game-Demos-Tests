@@ -36,6 +36,14 @@ function Turret (scene,layer){//inherits carrage
 		//missile: this.missile_3
 	};
 
+	this.showDmg = function(){
+		if(this.hp < (this.maxhp/4)){ //Less than 25% health
+			this.sprites[1].offset(0,37);
+		}else{
+			this.sprites[1].offset(0,0);
+		}
+	}
+	
 	//Weapons /Missile types
 	this.missile = [];
 	this.missile[1] = {"img":"assets/general/missiles.png", "xoffset":"20" ,"w":2, "h":2, "dmg":7, "range":300};
