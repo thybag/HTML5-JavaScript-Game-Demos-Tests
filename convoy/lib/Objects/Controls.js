@@ -15,13 +15,23 @@ function Controls(eng, overlay){
 		if(sprite === null){
 			eng.badguys.forEach(function(unit){
 				if(sjs.collision.isPointInRectangle(x,y,unit)){
-					console.log("..")
 					unit.makeTarget();
 					return;
 				}
 			});
 		}
 	});
+
+	//Show quick message to player
+	this.flash = function(msg){
+
+		document.getElementById('flash_message').innerHTML = msg;
+		document.getElementById('flash_message').style.display = 'block';
+
+		setTimeout(function(){
+			document.getElementById('flash_message').style.display = 'none';
+		},800);
+	}
 
 
 	this.setUpAudio = function(){
@@ -33,11 +43,9 @@ function Controls(eng, overlay){
 			if(audio.innerHTML == 'Music: On'){
 				audio.innerHTML = 'Music: Off';
 				document.getElementById('audio').pause();
-				console.log("a");
 			}else{
 				audio.innerHTML = 'Music: On';
 				document.getElementById('audio').play();
-				console.log("b");
 			}
 		},false);
 	}
@@ -70,22 +78,28 @@ function Controls(eng, overlay){
 			eng.convoy.add(new window[item](eng.scene,eng.layer));
 			this.updateCash();
 		}else{
-			console.log("not enough cash");
-
+			this.flash("You cannot afford to buy this vehicle");
 		}
 	}
 
 	this.repair = function(sp){
+
 		if(this.canRepair(sp)){
-			this.charge(this.getRepairCost(sp));
-			sp.hp = sp.maxhp;
-			sp.showDmg();
+
+			var cost = this.getRepairCost(sp);
+			if(cost == 0){
+				this.flash("This vehicle is already at maxium health");
+			}else{
+				this.charge(cost);
+				sp.hp = sp.maxhp;
+				sp.showDmg();
+			}
 		}else{
-			console.log("Cannot afford action");
+			console.log("no");
+			this.flash("You do not have enough cash to repair this vehicle");
 		}
 	}
 	this.canRepair = function(sp){
-
 		return (this.cash >= this.getRepairCost(sp));
 	}
 	this.getRepairCost = function(sp){
@@ -100,7 +114,7 @@ function Controls(eng, overlay){
 			this.charge(this.getUpgradeCost(sp));
 			sp.upgrade();
 		}else{
-			console.log("Cannot afford action");
+			this.flash("Cannot afford to upgrade vehicle at this time");
 		}
 	}
 	this.canUpgrade = function(sp){
